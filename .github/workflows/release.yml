@@ -1,0 +1,65 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Sidekick Java Agent - Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.SIDEKICK_DEVOPS_GITHUB_ACCESS_TOKEN }}
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Configure CI Git User
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+
+      - name: Configure Maven settings.xml
+        uses: whelk-io/maven-settings-xml-action@v14
+        with:
+          repositories: >-
+            [
+              {
+                "id": "thundra-releases",
+                "url": "https://repo.thundra.io/content/repositories/thundra-releases"
+              },
+              {
+                "id": "sidekick-releases",
+                "url": "https://repo.thundra.io/content/repositories/sidekick-releases",
+                "releases": {
+                  "enabled": "true"
+                },
+                "snapshots": {
+                  "enabled": "false"
+                }
+              }
+            ]
+          servers: >-
+            [
+              {
+                "id": "thundra-releases",
+                "username": "${{ secrets.THUNDRA_INTERNAL_REPO_USERNAME}}",
+                "password": "${{ secrets.THUNDRA_INTERNAL_REPO_PASSWORD}}"
+              },
+              {
+                "id": "sidekick-releases",
+                "username": "${{ secrets.THUNDRA_INTERNAL_REPO_USERNAME}}",
+                "password": "${{ secrets.THUNDRA_INTERNAL_REPO_PASSWORD}}"
+              }
+            ]
+
+      - name: Build and Release with Maven
+        env:
+          GITHUB_TOKEN: ${{ secrets.SIDEKICK_DEVOPS_GITHUB_ACCESS_TOKEN }}
+        run: mvn -q clean install release:clean release:prepare release:perform release:clean --batch-mode -P release

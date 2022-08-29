@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>com.runsidekick.agent</groupId>
+        <artifactId>sidekick-agent-parent</artifactId>
+        <version>0.0.10-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.runsidekick.agent</groupId>
+    <artifactId>sidekick-agent-api-tracepoint-integrations-junit5</artifactId>
+    <name>sidekick-agent-trace-tracepoint-integrations-junit5</name>
+
+    <properties>
+        <junit5.jupiter.version>5.7.1</junit5.jupiter.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.runsidekick.agent</groupId>
+            <artifactId>sidekick-agent-api-tracepoint</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit5.jupiter.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>

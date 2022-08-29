@@ -1,0 +1,6 @@
+com.runsidekick.agent.logpoint.handler.request.PutLogPointRequestHandler
+com.runsidekick.agent.logpoint.handler.request.UpdateLogPointRequestHandler
+com.runsidekick.agent.logpoint.handler.request.RemoveBatchLogPointRequestHandler
+com.runsidekick.agent.logpoint.handler.request.RemoveLogPointRequestHandler
+com.runsidekick.agent.logpoint.handler.request.EnableLogPointRequestHandler
+com.runsidekick.agent.logpoint.handler.request.DisableLogPointRequestHandler
