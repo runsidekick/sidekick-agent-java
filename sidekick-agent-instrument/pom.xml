@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.runsidekick.agent</groupId>
+        <artifactId>sidekick-agent-parent</artifactId>
+        <version>0.0.10-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.runsidekick.agent</groupId>
+    <artifactId>sidekick-agent-instrument</artifactId>
+    <name>sidekick-agent-instrument</name>
+
+    <dependencies>
+
+        <!-- Sidekick dependencies                      -->
+        <!-- ========================================== -->
+        <dependency>
+            <groupId>com.runsidekick.agent</groupId>
+            <artifactId>sidekick-agent-core</artifactId>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.runsidekick.agent</groupId>-->
+<!--            <artifactId>sidekick-agent-jdk-attach</artifactId>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
+        <!-- ========================================== -->
+
+        <!-- Test dependencies                          -->
+        <!-- ========================================== -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- ========================================== -->
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Agent-Class>com.runsidekick.agent.instrument.Agent</Agent-Class>
+                            <Premain-Class>com.runsidekick.agent.instrument.Agent</Premain-Class>
+                            <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                            <Can-Redefine-Classes>true</Can-Redefine-Classes>
+                            <Can-Set-Native-Method-Prefix>true</Can-Set-Native-Method-Prefix>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <configuration>
+                    <options>
+                        <option>-keep class !com.runsidekick.agent.instrument.internal.** { *; }</option>
+                        <option>-dontshrink</option>
+                        <option>-dontoptimize</option>
+                        <option>-ignorewarnings</option>
+                    </options>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,6 @@
+com.runsidekick.agent.tracepoint.handler.request.PutTracePointRequestHandler
+com.runsidekick.agent.tracepoint.handler.request.UpdateTracePointRequestHandler
+com.runsidekick.agent.tracepoint.handler.request.RemoveBatchTracePointRequestHandler
+com.runsidekick.agent.tracepoint.handler.request.RemoveTracePointRequestHandler
+com.runsidekick.agent.tracepoint.handler.request.EnableTracePointRequestHandler
+com.runsidekick.agent.tracepoint.handler.request.DisableTracePointRequestHandler

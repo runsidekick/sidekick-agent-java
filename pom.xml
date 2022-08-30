@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.runsidekick.agent</groupId>
+    <artifactId>sidekick-agent-parent</artifactId>
+    <version>0.0.10-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Sidekick Java Agent</name>
+    <description>Sidekick Java Agent</description>
+    <url>https://www.runsidekick.com</url>
+    <scm>
+        <connection>scm:git:https://${GITHUB_TOKEN}@github.com/runsidekick/sidekick-agent-java.git</connection>
+        <developerConnection>scm:git:https://${GITHUB_TOKEN}@github.com/runsidekick/sidekick-agent-java.git</developerConnection>
+        <url>https://github.com/runsidekick/sidekick-agent-java</url>
+        <tag>HEAD</tag>
+    </scm>
+    <developers>
+        <developer>
+            <id>serkan</id>
+            <name>Serkan OZAL</name>
+            <email>serkan@thundra.io</email>
+        </developer>
+    </developers>
+
+    <properties>
+
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <jackson.version>2.12.7</jackson.version>
+        <json.version>20160810</json.version>
+        <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
+        <okhttp.version>4.9.1</okhttp.version>
+        <apache.commons.collections.version>4.2</apache.commons.collections.version>
+        <apache.commons.lang.version>3.12.0</apache.commons.lang.version>
+        <apache.commons.io.version>2.10.0</apache.commons.io.version>
+        <apache.commons.text.version>1.6</apache.commons.text.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <antlr4.version>4.7.1</antlr4.version>
+        <weak-lock-free.version>0.18</weak-lock-free.version>
+        <concurrentlinkedhashmap.version>1.4.2</concurrentlinkedhashmap.version>
+        <tinylog.version>1.3.5</tinylog.version>
+        <mustache.version>0.9.10</mustache.version>
+
+        <mockito.version>3.8.0</mockito.version>
+        <powermock.version>2.0.9</powermock.version>
+        <junit.version>4.13.1</junit.version>
+        <hamcrest.version>1.3</hamcrest.version>
+        <testcontainers.version>1.16.0</testcontainers.version>
+
+        <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
+        <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+        <maven.javadoc.plugin.version>2.9</maven.javadoc.plugin.version>
+        <maven.shade.plugin.version>3.1.1</maven.shade.plugin.version>
+        <maven.proguard.plugin.version>2.0.14</maven.proguard.plugin.version>
+        <maven.release.plugin.version>2.5.3</maven.release.plugin.version>
+
+    </properties>
+
+    <modules>
+
+        <module>sidekick-agent-core</module>
+
+        <module>sidekick-agent-api-broker</module>
+        <module>sidekick-agent-api-tracepoint</module>
+        <module>sidekick-agent-api-tracepoint-integrations-junit4</module>
+        <module>sidekick-agent-api-tracepoint-integrations-junit5</module>
+        <module>sidekick-agent-api-logpoint</module>
+
+        <module>sidekick-agent-jdk-attach</module>
+        <module>sidekick-agent-instrument</module>
+
+        <module>sidekick-agent-broker</module>
+        <module>sidekick-agent-probe</module>
+        <module>sidekick-agent-tracepoint</module>
+        <module>sidekick-agent-logpoint</module>
+
+        <module>sidekick-agent-all</module>
+        <module>sidekick-agent-bootstrap</module>
+
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- Sidekick dependencies                      -->
+            <!-- ========================================== -->
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-core</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-api-broker</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-api-tracepoint</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-jdk-attach</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-instrument</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-broker</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-probe</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <!-- ========================================== -->
+
+            <!-- 3rd party dependencies                     -->
+            <!-- ========================================== -->
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${jetbrains.annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-afterburner</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>${json.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${apache.commons.collections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons.lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${apache.commons.io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${apache.commons.text.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.tinylog</groupId>
+                <artifactId>tinylog</artifactId>
+                <version>${tinylog.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.tinylog</groupId>
+                <artifactId>slf4j-binding</artifactId>
+                <version>${tinylog.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>${antlr4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blogspot.mydailyjava</groupId>
+                <artifactId>weak-lock-free</artifactId>
+                <version>${weak-lock-free.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
+                <artifactId>concurrentlinkedhashmap-lru</artifactId>
+                <version>${concurrentlinkedhashmap.version}</version>
+            </dependency>
+            <!-- ========================================== -->
+
+            <!-- Test dependencies                          -->
+            <!-- ========================================== -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito2</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>${hamcrest.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-core</artifactId>
+                <version>${project.parent.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <!-- ========================================== -->
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven.source.plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                                <goal>test-jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven.jar.plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-tests</id>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven.javadoc.plugin.version}</version>
+                    <configuration>
+                        <aggregate>true</aggregate>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>aggregate-javadocs</id>
+                            <goals>
+                                <goal>aggregate</goal>
+                            </goals>
+                            <phase>install</phase>
+                        </execution>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven.shade.plugin.version}</version>
+                    <configuration>
+                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                        <transformers>
+                            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                        </transformers>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.wvengen</groupId>
+                    <artifactId>proguard-maven-plugin</artifactId>
+                    <version>${maven.proguard.plugin.version}</version>
+                    <configuration>
+                        <includeDependency>false</includeDependency>
+                        <injar>${project.build.finalName}.jar</injar>
+                        <outjar>${project.build.finalName}.jar</outjar>
+                        <inFilter>!**/module-info.class,!META-INF/versions/9/**</inFilter>
+                        <libs>
+                            <lib>${java.home}/lib/rt.jar</lib>
+                        </libs>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>proguard</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven.release.plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.scm</groupId>
+                            <artifactId>maven-scm-provider-gitexe</artifactId>
+                            <version>1.8.1</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-scm-plugin</artifactId>
+                            <version>1.8.1</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <tagNameFormat>v@{project.version}</tagNameFormat>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <releaseProfiles>releases</releaseProfiles>
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <checkModificationExcludes>
+                            <checkModificationExclude>pom.xml</checkModificationExclude>
+                        </checkModificationExcludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>sidekick-snapshots</id>
+                    <name>Sidekick Snapshots</name>
+                    <url>https://repo.thundra.io/content/repositories/sidekick-snapshots/</url>
+                    <uniqueVersion>true</uniqueVersion>
+                </snapshotRepository>
+                <repository>
+                    <id>sidekick-releases</id>
+                    <name>Sidekick Releases</name>
+                    <url>https://repo.thundra.io/content/repositories/sidekick-releases/</url>
+                </repository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <repositories>
+        <repository>
+            <id>thundra-releases</id>
+            <name>Thundra Releases</name>
+            <url>https://repo.thundra.io/content/repositories/thundra-releases</url>
+        </repository>
+    </repositories>
+
+</project>
