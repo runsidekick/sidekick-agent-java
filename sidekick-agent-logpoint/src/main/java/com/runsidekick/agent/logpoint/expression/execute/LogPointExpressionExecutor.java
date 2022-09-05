@@ -7,5 +7,5 @@ import java.util.Map;
  */
 public interface LogPointExpressionExecutor {
 
-    String execute(String expression, Map<String, Object> variables);
+    String execute(String expression, Map<String, String> variables);
 }

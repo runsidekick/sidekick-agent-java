@@ -78,6 +78,9 @@
         <module>sidekick-agent-tracepoint</module>
         <module>sidekick-agent-logpoint</module>
 
+        <module>sidekick-agent-data-redaction</module>
+        <module>sidekick-agent-serialization</module>
+
         <module>sidekick-agent-all</module>
         <module>sidekick-agent-bootstrap</module>
 
@@ -105,6 +108,11 @@
             </dependency>
             <dependency>
                 <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-api-logpoint</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
                 <artifactId>sidekick-agent-jdk-attach</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
@@ -121,6 +129,16 @@
             <dependency>
                 <groupId>com.runsidekick.agent</groupId>
                 <artifactId>sidekick-agent-probe</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-serialization</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-data-redaction</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
             <!-- ========================================== -->

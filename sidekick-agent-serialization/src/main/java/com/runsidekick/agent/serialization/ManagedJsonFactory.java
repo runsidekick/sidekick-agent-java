@@ -1,4 +1,4 @@
-package com.runsidekick.agent.tracepoint.serialization;
+package com.runsidekick.agent.serialization;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.SerializableString;

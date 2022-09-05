@@ -1,10 +1,10 @@
-package com.runsidekick.agent.tracepoint.domain;
+package com.runsidekick.agent.probe.domain;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.runsidekick.agent.tracepoint.serialization.SerializationHelper;
+import com.runsidekick.agent.serialization.SerializationHelper;
 
 import java.io.IOException;
 

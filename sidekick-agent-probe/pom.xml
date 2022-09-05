@@ -28,6 +28,10 @@
             <groupId>com.runsidekick.agent</groupId>
             <artifactId>sidekick-agent-instrument</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.runsidekick.agent</groupId>
+            <artifactId>sidekick-agent-serialization</artifactId>
+        </dependency>
         <!-- ========================================== -->
 
         <!-- 3rd party dependencies                     -->

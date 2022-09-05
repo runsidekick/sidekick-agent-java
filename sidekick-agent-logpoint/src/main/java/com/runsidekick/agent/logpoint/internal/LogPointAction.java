@@ -3,19 +3,21 @@ package com.runsidekick.agent.logpoint.internal;
 import com.runsidekick.agent.broker.error.CodedException;
 import com.runsidekick.agent.broker.error.CommonErrorCodes;
 import com.runsidekick.agent.core.logger.LoggerFactory;
+import com.runsidekick.agent.dataredaction.DataRedactionManager;
 import com.runsidekick.agent.logpoint.LogPointSupport;
-import com.runsidekick.agent.logpoint.domain.Variable;
 import com.runsidekick.agent.logpoint.event.LogPointEvent;
 import com.runsidekick.agent.logpoint.event.LogPointFailedEvent;
 import com.runsidekick.agent.logpoint.expression.execute.LogPointExpressionExecutor;
 import com.runsidekick.agent.probe.domain.Probe;
 import com.runsidekick.agent.probe.domain.ProbeAction;
+import com.runsidekick.agent.probe.domain.Variable;
 import org.slf4j.Logger;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +34,13 @@ class LogPointAction implements ProbeAction<LogPointContext> {
     private final LogPointExpressionExecutor expressionExecutor;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
-    LogPointAction(LogPointContext context, LogPointExpressionExecutor expressionExecutor) {
+    private final DataRedactionManager dataRedactionManager;
+
+    LogPointAction(LogPointContext context, LogPointExpressionExecutor expressionExecutor,
+                   DataRedactionManager dataRedactionManager) {
         this.context = context;
         this.expressionExecutor = expressionExecutor;
+        this.dataRedactionManager = dataRedactionManager;
     }
 
     @Override
@@ -64,7 +70,18 @@ class LogPointAction implements ProbeAction<LogPointContext> {
             variables.put(localVarName, localVarValue);
         }
 
-        String logMessage = expressionExecutor.execute(logExpression, variables);
+        Map<String, String> serializedVariables = new LinkedHashMap<>(variableList.size());
+        for (Variable variable : variableList) {
+            String serializedValue = Variable.VariableSerializer.serializeVariable(variable);
+            serializedVariables.put(variable.getName(), serializedValue);
+        }
+
+        this.dataRedactionManager.redactFrameData(serializedVariables);
+
+        String logMessage = expressionExecutor.execute(logExpression, serializedVariables);
+
+        this.dataRedactionManager.redactLogMessage(fileName, line, methodName,
+                serializedVariables, logExpression, logMessage);
 
         LogPointEvent logPointEvent =
                 new LogPointEvent(logPointId,

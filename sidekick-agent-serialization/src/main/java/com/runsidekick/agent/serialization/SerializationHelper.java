@@ -1,4 +1,4 @@
-package com.runsidekick.agent.tracepoint.serialization;
+package com.runsidekick.agent.serialization;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -36,10 +36,10 @@ import com.fasterxml.jackson.databind.type.MapLikeType;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.util.NameTransformer;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+import com.runsidekick.agent.core.logger.LoggerFactory;
 import com.runsidekick.agent.core.util.PropertyUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import com.runsidekick.agent.core.logger.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;

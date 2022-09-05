@@ -3,11 +3,12 @@ package com.runsidekick.agent.tracepoint.internal;
 import com.runsidekick.agent.broker.error.CodedException;
 import com.runsidekick.agent.broker.error.CommonErrorCodes;
 import com.runsidekick.agent.core.logger.LoggerFactory;
+import com.runsidekick.agent.dataredaction.DataRedactionManager;
 import com.runsidekick.agent.probe.domain.Probe;
 import com.runsidekick.agent.probe.domain.ProbeAction;
+import com.runsidekick.agent.probe.domain.Variable;
 import com.runsidekick.agent.tracepoint.TracePointSupport;
 import com.runsidekick.agent.tracepoint.domain.Frame;
-import com.runsidekick.agent.tracepoint.domain.Variable;
 import com.runsidekick.agent.tracepoint.domain.Variables;
 import com.runsidekick.agent.tracepoint.event.TracePointSnapshotEvent;
 import com.runsidekick.agent.tracepoint.event.TracePointSnapshotFailedEvent;
@@ -33,8 +34,11 @@ class TracePointAction implements ProbeAction<TracePointContext> {
 
     private final TracePointContext context;
 
-    TracePointAction(TracePointContext context) {
+    private final DataRedactionManager dataRedactionManager;
+
+    TracePointAction(TracePointContext context, DataRedactionManager dataRedactionManager) {
         this.context = context;
+        this.dataRedactionManager = dataRedactionManager;
     }
 
     @Override
@@ -85,6 +89,9 @@ class TracePointAction implements ProbeAction<TracePointContext> {
         Throwable throwable = new Throwable();
 
         TracePointSupport.publishTracePointEvent(() -> {
+
+            this.dataRedactionManager.redactFrameData(serializedVariables);
+
             StackTraceElement[] stackTraceElements = stackTraceProvider.getStackTrace(throwable, 3);
             List<Frame> frames = new ArrayList<>(stackTraceElements.length);
 

@@ -5,6 +5,8 @@ import com.runsidekick.agent.broker.error.CodedException;
 import com.runsidekick.agent.core.logger.LoggerFactory;
 import com.runsidekick.agent.core.util.ExecutorUtils;
 import com.runsidekick.agent.core.util.StringUtils;
+import com.runsidekick.agent.dataredaction.DataRedactionManager;
+import com.runsidekick.agent.dataredaction.impl.DataRedactionManagerImpl;
 import com.runsidekick.agent.logpoint.expression.execute.LogPointExpressionExecutor;
 import com.runsidekick.agent.logpoint.expression.execute.impl.MustacheExpressionExecutor;
 import com.runsidekick.agent.probe.ProbeSupport;
@@ -38,6 +40,7 @@ public final class LogPointManager {
     private static final ScheduledExecutorService logPointExpireScheduler =
             ExecutorUtils.newScheduledExecutorService("logpoint-expire-scheduler");
     private static final LogPointExpressionExecutor expressionExecutor = new MustacheExpressionExecutor();
+    private static final DataRedactionManager DATA_REDUCTION_MANAGER = new DataRedactionManagerImpl();
     private static boolean initialized;
 
     private LogPointManager() {
@@ -64,7 +67,7 @@ public final class LogPointManager {
         return new ConditionAwareProbeAction<>(
                 new RateLimitedProbeAction<>(
                         new ExpiringProbeAction<>(
-                                new LogPointAction(context, expressionExecutor)
+                                new LogPointAction(context, expressionExecutor, DATA_REDUCTION_MANAGER)
                         )
                 )
         );

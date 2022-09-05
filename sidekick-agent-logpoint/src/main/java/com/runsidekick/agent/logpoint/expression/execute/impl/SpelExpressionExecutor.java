@@ -18,7 +18,7 @@ public class SpelExpressionExecutor implements LogPointExpressionExecutor {
     private static final ConcurrentWeakMap<String, Expression> expressionMap = new ConcurrentWeakMap();
 
     @Override
-    public String execute(String expression, Map<String, Object> variables) {
+    public String execute(String expression, Map<String, String> variables) {
         StandardEvaluationContext context = new StandardEvaluationContext(variables);
         context.addPropertyAccessor(new MapAccessor());
 

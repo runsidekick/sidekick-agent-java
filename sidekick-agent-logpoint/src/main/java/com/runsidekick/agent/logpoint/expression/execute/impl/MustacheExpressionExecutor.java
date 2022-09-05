@@ -25,7 +25,7 @@ public class MustacheExpressionExecutor implements LogPointExpressionExecutor {
     }
 
     @Override
-    public String execute(String expression, Map<String, Object> variables) {
+    public String execute(String expression, Map<String, String> variables) {
         StringWriter writer = threadLocalWriter.get();
         writer.getBuffer().setLength(0);
         Mustache mustache = expressionMap.get(expression);
