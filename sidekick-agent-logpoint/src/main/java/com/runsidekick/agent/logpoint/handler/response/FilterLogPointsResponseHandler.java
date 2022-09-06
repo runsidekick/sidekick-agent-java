@@ -48,7 +48,8 @@ public class FilterLogPointsResponseHandler
                     logPoint.getExpireSecs(),
                     logPoint.getExpireCount(),
                     logPoint.isStdoutEnabled(),
-                    logPoint.getLogLevel());
+                    logPoint.getLogLevel(),
+                    logPoint.isDisabled());
             BrokerManager.publishApplicationStatus();
             if (logPoint.getClient() != null) {
                 BrokerManager.publishApplicationStatus(logPoint.getClient());

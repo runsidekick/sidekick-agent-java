@@ -134,7 +134,7 @@ public final class TracePointManager {
 
     public static void putTracePoint(String id, String fileName, String className, int lineNo, String client,
                                      String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing) {
+                                     boolean enableTracing, boolean disable) {
         LOGGER.debug(
                 "Putting tracepoint with id {} to class {} on line {} from client {}",
                 id, className, lineNo, client);
@@ -170,7 +170,7 @@ public final class TracePointManager {
                     new TracePointContext(
                             probe, id, conditionExpression,
                             expireSecs, expireCount, enableTracing,
-                            condition, false);
+                            condition, disable);
             ProbeAction<TracePointContext> action = createTracePointAction(context);
 
             boolean added = ProbeSupport.addProbeAction(probe, action) == null;

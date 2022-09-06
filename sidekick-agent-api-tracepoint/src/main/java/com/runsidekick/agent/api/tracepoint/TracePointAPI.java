@@ -43,7 +43,7 @@ public final class TracePointAPI {
         public String putTracePoint(String className, int lineNo, String client,
                                     String fileHash, String conditionExpression,
                                     int expireSecs, int expireCount,
-                                    boolean enableTracing) {
+                                    boolean enableTracing, boolean disable) {
             return null;
         }
 
@@ -78,11 +78,11 @@ public final class TracePointAPI {
     public static String putTracePoint(String className, int lineNo,
                                        String fileHash, String conditionExpression,
                                        int expireSecs, int expireCount,
-                                       boolean enableTracing) {
+                                       boolean enableTracing, boolean disable) {
         return tracePointAPIService.putTracePoint(
                 className, lineNo, null,
                 fileHash, conditionExpression,
-                expireSecs, expireCount, enableTracing);
+                expireSecs, expireCount, enableTracing, disable);
     }
 
     public static void updateTracePoint(String id,

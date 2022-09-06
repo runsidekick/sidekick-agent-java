@@ -18,6 +18,7 @@ public class PutLogPointRequest extends BaseRequest {
     private int expireCount;
     private boolean stdoutEnabled;
     private String logLevel;
+    private boolean disable;
 
     public String getLogPointId() {
         return logPointId;
@@ -107,6 +108,14 @@ public class PutLogPointRequest extends BaseRequest {
         this.logLevel = logLevel;
     }
 
+    public boolean isDisable() {
+        return disable;
+    }
+
+    public void setDisable(boolean disable) {
+        this.disable = disable;
+    }
+
     @Override
     public String toString() {
         return "PutLogPointRequest{" +
@@ -123,6 +132,7 @@ public class PutLogPointRequest extends BaseRequest {
                 ", client='" + client + '\'' +
                 ", stdoutEnabled=" + stdoutEnabled +
                 ", logLevel='" + logLevel + '\'' +
+                ", disable='" + disable + '\'' +
                 '}';
     }
 }

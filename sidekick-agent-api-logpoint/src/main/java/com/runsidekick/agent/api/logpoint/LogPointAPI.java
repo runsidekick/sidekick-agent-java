@@ -42,7 +42,8 @@ public final class LogPointAPI {
         @Override
         public String putLogPoint(String className, int lineNo, String client, String logExpression,
                                   String fileHash, String conditionExpression,
-                                  int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel) {
+                                  int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel,
+                                  boolean disable) {
             return null;
         }
 
@@ -77,11 +78,11 @@ public final class LogPointAPI {
     public static String putLogPoint(String className, int lineNo, String logExpression,
                                      String fileHash, String conditionExpression,
                                      int expireSecs, int expireCount,
-                                     boolean stdoutEnabled, String logLevel) {
+                                     boolean stdoutEnabled, String logLevel, boolean disable) {
         return logPointAPIService.putLogPoint(
                 className, lineNo, null, logExpression,
                 fileHash, conditionExpression,
-                expireSecs, expireCount, stdoutEnabled, logLevel);
+                expireSecs, expireCount, stdoutEnabled, logLevel, disable);
     }
 
     public static void updateLogPoint(String id, String logExpression,
