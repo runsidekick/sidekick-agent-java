@@ -35,7 +35,8 @@ public class PutLogPointRequestHandler
                     request.getExpireSecs(),
                     request.getExpireCount(),
                     request.isStdoutEnabled(),
-                    request.getLogLevel());
+                    request.getLogLevel(),
+                    request.isDisable());
             BrokerManager.publishApplicationStatus();
             if (request.getClient() != null) {
                 BrokerManager.publishApplicationStatus(request.getClient());

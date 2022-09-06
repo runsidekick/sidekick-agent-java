@@ -33,7 +33,8 @@ public class PutTracePointRequestHandler
                     request.getConditionExpression(),
                     request.getExpireSecs(),
                     request.getExpireCount(),
-                    request.isEnableTracing());
+                    request.isEnableTracing(),
+                    request.isDisable());
             BrokerManager.publishApplicationStatus();
             if (request.getClient() != null) {
                 BrokerManager.publishApplicationStatus(request.getClient());

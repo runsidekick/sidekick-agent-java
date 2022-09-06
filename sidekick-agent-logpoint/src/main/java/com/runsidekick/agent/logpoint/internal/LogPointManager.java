@@ -142,7 +142,8 @@ public final class LogPointManager {
 
     public static void putLogPoint(String id, String fileName, String className, int lineNo, String client,
                                    String logExpression, String fileHash, String conditionExpression,
-                                   int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel) {
+                                   int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel,
+                                   boolean disable) {
         LOGGER.debug(
                 "Putting logpoint with id {} to class {} on line {} from client {}",
                 id, className, lineNo, client);
@@ -176,7 +177,7 @@ public final class LogPointManager {
 
             LogPointContext context =
                     new LogPointContext(probe, id, logExpression, conditionExpression,
-                            expireSecs, expireCount, condition, false, stdoutEnabled, logLevel);
+                            expireSecs, expireCount, condition, disable, stdoutEnabled, logLevel);
             ProbeAction<LogPointContext> action = createLogPointAction(context);
 
             boolean added = ProbeSupport.addProbeAction(probe, action) == null;

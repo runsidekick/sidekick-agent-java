@@ -16,6 +16,7 @@ public class PutTracePointRequest extends BaseRequest {
     private int expireSecs;
     private int expireCount;
     private boolean enableTracing;
+    private boolean disable;
 
     public String getTracePointId() {
         return tracePointId;
@@ -89,6 +90,14 @@ public class PutTracePointRequest extends BaseRequest {
         this.enableTracing = enableTracing;
     }
 
+    public boolean isDisable() {
+        return disable;
+    }
+
+    public void setDisable(boolean disable) {
+        this.disable = disable;
+    }
+
     @Override
     public String toString() {
         return "PutTracePointRequest{" +
@@ -101,6 +110,7 @@ public class PutTracePointRequest extends BaseRequest {
                 ", expireSecs=" + expireSecs +
                 ", expireCount=" + expireCount +
                 ", enableTracing=" + enableTracing +
+                ", disable=" + disable +
                 ", id='" + id + '\'' +
                 ", client='" + client + '\'' +
                 '}';
