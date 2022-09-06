@@ -43,14 +43,14 @@ public final class LogPointAPI {
         public String putLogPoint(String className, int lineNo, String client, String logExpression,
                                   String fileHash, String conditionExpression,
                                   int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel,
-                                  boolean disable) {
+                                  boolean disable, boolean predefined) {
             return null;
         }
 
         @Override
         public void updateLogPoint(String id, String client, String logExpression,
                                    String conditionExpression, int expireSecs, int expireCount, boolean disable,
-                                   boolean stdoutEnabled, String logLevel) {
+                                   boolean stdoutEnabled, String logLevel, boolean predefined) {
         }
 
         @Override
@@ -78,20 +78,20 @@ public final class LogPointAPI {
     public static String putLogPoint(String className, int lineNo, String logExpression,
                                      String fileHash, String conditionExpression,
                                      int expireSecs, int expireCount,
-                                     boolean stdoutEnabled, String logLevel, boolean disable) {
+                                     boolean stdoutEnabled, String logLevel, boolean disable, boolean predefined) {
         return logPointAPIService.putLogPoint(
                 className, lineNo, null, logExpression,
                 fileHash, conditionExpression,
-                expireSecs, expireCount, stdoutEnabled, logLevel, disable);
+                expireSecs, expireCount, stdoutEnabled, logLevel, disable, predefined);
     }
 
     public static void updateLogPoint(String id, String logExpression,
                                       String conditionExpression, int expireSecs, int expireCount, boolean disable,
-                                      boolean stdoutEnabled, String logLevel) {
+                                      boolean stdoutEnabled, String logLevel, boolean predefined) {
         logPointAPIService.updateLogPoint(
                 id, null, logExpression,
                 conditionExpression, expireSecs,
-                expireCount, disable, stdoutEnabled, logLevel);
+                expireCount, disable, stdoutEnabled, logLevel, predefined);
     }
 
     public static void removeLogPoint(String id) {

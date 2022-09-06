@@ -19,24 +19,16 @@ public class LogPoint {
     private String conditionExpression;
     private int expireSecs;
     private int expireCount;
-    protected String fileHash;
-
-    public String getFileHash() {
-        return fileHash;
-    }
-
-    public void setFileHash(String fileHash) {
-        this.fileHash = fileHash;
-    }
-
+    private String fileHash;
     private boolean disabled;
+    private boolean predefined;
 
     public LogPoint() {
     }
 
     public LogPoint(String id, String fileName, String className, int lineNo, String client, String logExpression,
                     String conditionExpression, int expireSecs, int expireCount,
-                    boolean disabled, boolean stdoutEnabled, String logLevel) {
+                    boolean disabled, boolean stdoutEnabled, String logLevel, boolean predefined) {
         this.id = id;
         this.fileName = fileName;
         this.className = className;
@@ -49,6 +41,7 @@ public class LogPoint {
         this.disabled = disabled;
         this.stdoutEnabled = stdoutEnabled;
         this.logLevel = logLevel;
+        this.predefined = predefined;
     }
 
     public String getId() {
@@ -123,6 +116,14 @@ public class LogPoint {
         this.expireCount = expireCount;
     }
 
+    public String getFileHash() {
+        return fileHash;
+    }
+
+    public void setFileHash(String fileHash) {
+        this.fileHash = fileHash;
+    }
+
     public boolean isDisabled() {
         return disabled;
     }
@@ -147,6 +148,14 @@ public class LogPoint {
         this.logLevel = logLevel;
     }
 
+    public boolean isPredefined() {
+        return predefined;
+    }
+
+    public void setPredefined(boolean predefined) {
+        this.predefined = predefined;
+    }
+
     @Override
     public String toString() {
         return "LogPoint{" +
@@ -163,6 +172,7 @@ public class LogPoint {
                 ", stdoutEnabled=" + stdoutEnabled +
                 ", logLevel='" + logLevel + '\'' +
                 ", disabled=" + disabled +
+                ", predefined=" + predefined +
                 '}';
     }
 }

@@ -63,14 +63,14 @@ public final class TracePointSupport {
 
     public static void putTracePoint(String id, String className, int lineNo, String client,
                                      String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing, boolean disable) {
+                                     boolean enableTracing, boolean disable, boolean predefined) {
         putTracePoint(id, null, className, lineNo, client, fileHash,
-                conditionExpression, expireSecs, expireCount, enableTracing, disable);
+                conditionExpression, expireSecs, expireCount, enableTracing, disable, predefined);
     }
 
     public static void putTracePoint(String id, String fileName, String className, int lineNo, String client,
                                      String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing, boolean disable) {
+                                     boolean enableTracing, boolean disable, boolean predefined) {
         if (client == null) {
             client = BrokerManager.BROKER_CLIENT;
         }
@@ -86,12 +86,12 @@ public final class TracePointSupport {
         }
         TracePointManager.putTracePoint(
                 id, fileName, className, lineNo, client, fileHash, conditionExpression,
-                expireSecs, expireCount, enableTracing, disable);
+                expireSecs, expireCount, enableTracing, disable, predefined);
     }
 
     public static void updateTracePoint(String id, String client,
                                         String conditionExpression, int expireSecs, int expireCount,
-                                        boolean enableTracing, boolean disable) {
+                                        boolean enableTracing, boolean disable, boolean predefined) {
         if (client == null) {
             client = BrokerManager.BROKER_CLIENT;
         }
@@ -107,7 +107,7 @@ public final class TracePointSupport {
         }
         TracePointManager.updateTracePoint(
                 id, client, conditionExpression,
-                expireSecs, expireCount, enableTracing, disable);
+                expireSecs, expireCount, enableTracing, disable, predefined);
     }
 
     public static void removeTracePoint(String id, String client) {

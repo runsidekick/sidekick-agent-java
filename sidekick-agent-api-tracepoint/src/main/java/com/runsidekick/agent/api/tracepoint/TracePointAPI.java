@@ -43,14 +43,14 @@ public final class TracePointAPI {
         public String putTracePoint(String className, int lineNo, String client,
                                     String fileHash, String conditionExpression,
                                     int expireSecs, int expireCount,
-                                    boolean enableTracing, boolean disable) {
+                                    boolean enableTracing, boolean disable, boolean predefined) {
             return null;
         }
 
         @Override
         public void updateTracePoint(String id, String client,
                                      String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing, boolean disable) {
+                                     boolean enableTracing, boolean disable, boolean predefined) {
         }
 
         @Override
@@ -78,20 +78,20 @@ public final class TracePointAPI {
     public static String putTracePoint(String className, int lineNo,
                                        String fileHash, String conditionExpression,
                                        int expireSecs, int expireCount,
-                                       boolean enableTracing, boolean disable) {
+                                       boolean enableTracing, boolean disable, boolean predefined) {
         return tracePointAPIService.putTracePoint(
                 className, lineNo, null,
                 fileHash, conditionExpression,
-                expireSecs, expireCount, enableTracing, disable);
+                expireSecs, expireCount, enableTracing, disable, predefined);
     }
 
     public static void updateTracePoint(String id,
                                         String conditionExpression, int expireSecs, int expireCount,
-                                        boolean enableTracing, boolean disable) {
+                                        boolean enableTracing, boolean disable, boolean predefined) {
         tracePointAPIService.updateTracePoint(
                 id, null,
                 conditionExpression, expireSecs,
-                expireCount, enableTracing, disable);
+                expireCount, enableTracing, disable, predefined);
     }
 
     public static void removeTracePoint(String id) {

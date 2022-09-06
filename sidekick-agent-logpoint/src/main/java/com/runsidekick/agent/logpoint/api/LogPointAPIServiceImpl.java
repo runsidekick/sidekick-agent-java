@@ -37,7 +37,7 @@ public class LogPointAPIServiceImpl implements LogPointAPIService {
     public String putLogPoint(String className, int lineNo, String client, String logExpression,
                               String fileHash, String conditionExpression,
                               int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel,
-                              boolean disable) {
+                              boolean disable, boolean predefined) {
         if (StringUtils.isNullOrEmpty(client)) {
             client = CLIENT;
         }
@@ -45,21 +45,21 @@ public class LogPointAPIServiceImpl implements LogPointAPIService {
         LogPointSupport.putLogPoint(
                 id, className, lineNo,
                 client, logExpression, fileHash, conditionExpression,
-                expireSecs, expireCount, stdoutEnabled, logLevel, disable);
+                expireSecs, expireCount, stdoutEnabled, logLevel, disable, predefined);
         return id;
     }
 
     @Override
     public void updateLogPoint(String id, String client, String logExpression,
                                String conditionExpression, int expireSecs, int expireCount,
-                               boolean disable, boolean stdoutEnabled, String logLevel) {
+                               boolean disable, boolean stdoutEnabled, String logLevel, boolean predefined) {
         if (StringUtils.isNullOrEmpty(client)) {
             client = CLIENT;
         }
         LogPointSupport.updateLogPoint(
                 id, client, logExpression,
                 conditionExpression, expireSecs, expireCount,
-                disable, stdoutEnabled, logLevel);
+                disable, stdoutEnabled, logLevel, predefined);
     }
 
     @Override

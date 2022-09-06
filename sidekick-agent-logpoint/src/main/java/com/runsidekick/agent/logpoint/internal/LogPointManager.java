@@ -129,7 +129,8 @@ public final class LogPointManager {
                                             context.expireCount,
                                             context.disabled,
                                             context.stdoutEnabled,
-                                            context.logLevel);
+                                            context.logLevel,
+                                            context.predefined);
                             logPoints.add(logPoint);
                         }
                     });
@@ -140,7 +141,7 @@ public final class LogPointManager {
     public static void putLogPoint(String id, String fileName, String className, int lineNo, String client,
                                    String logExpression, String fileHash, String conditionExpression,
                                    int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel,
-                                   boolean disable) {
+                                   boolean disable, boolean predefined) {
         LOGGER.debug(
                 "Putting logpoint with id {} to class {} on line {} from client {}",
                 id, className, lineNo, client);
@@ -174,7 +175,7 @@ public final class LogPointManager {
 
             LogPointContext context =
                     new LogPointContext(probe, id, logExpression, conditionExpression,
-                            expireSecs, expireCount, condition, disable, stdoutEnabled, logLevel);
+                            expireSecs, expireCount, condition, disable, stdoutEnabled, logLevel, predefined);
             ProbeAction<LogPointContext> action = createLogPointAction(context);
 
             boolean added = ProbeSupport.addProbeAction(probe, action) == null;
@@ -187,7 +188,7 @@ public final class LogPointManager {
 
             logPointProbeMap.put(id, probe);
 
-            if (expireSecs > 0) {
+            if (expireSecs > 0 && !predefined) {
                 context.expireFuture =
                         logPointExpireScheduler.schedule(
                                 new LogPointExpireTask(context), expireSecs, TimeUnit.SECONDS);
@@ -210,7 +211,8 @@ public final class LogPointManager {
 
     public static synchronized void updateLogPoint(String id, String client, String logExpression,
                                                    String conditionExpression, int expireSecs, int expireCount,
-                                                   boolean disable, boolean stdoutEnabled, String logLevel) {
+                                                   boolean disable, boolean stdoutEnabled, String logLevel,
+                                                   boolean predefined) {
         LOGGER.debug(
                 "Updating logpoint with id {} from client {}",
                 id, client);
@@ -246,7 +248,7 @@ public final class LogPointManager {
             LogPointContext context =
                     new LogPointContext(
                             probe, id, logExpression, conditionExpression,
-                            expireSecs, expireCount, condition, disable, stdoutEnabled, logLevel);
+                            expireSecs, expireCount, condition, disable, stdoutEnabled, logLevel, predefined);
             ProbeAction<LogPointContext> action = createLogPointAction(context);
 
             ProbeAction<LogPointContext> existingAction = ProbeSupport.replaceProbeAction(probe, action);
@@ -256,7 +258,7 @@ public final class LogPointManager {
                         id, client);
                 throw new CodedException(LogPointErrorCodes.NO_LOGPOINT_EXIST_WITH_ID, id, client);
             }
-            if (expireSecs > 0) {
+            if (expireSecs > 0 && !predefined) {
                 context.expireFuture =
                         logPointExpireScheduler.schedule(
                                 new LogPointExpireTask(context), expireSecs, TimeUnit.SECONDS);

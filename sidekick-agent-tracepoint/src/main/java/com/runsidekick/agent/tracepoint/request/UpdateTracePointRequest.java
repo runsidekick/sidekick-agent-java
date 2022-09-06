@@ -16,6 +16,7 @@ public class UpdateTracePointRequest extends BaseRequest {
     private int expireCount;
     private boolean enableTracing;
     private boolean disable;
+    private boolean predefined;
 
     public String getTracePointId() {
         return tracePointId;
@@ -89,6 +90,14 @@ public class UpdateTracePointRequest extends BaseRequest {
         this.disable = disable;
     }
 
+    public boolean isPredefined() {
+        return predefined;
+    }
+
+    public void setPredefined(boolean predefined) {
+        this.predefined = predefined;
+    }
+
     @Override
     public String toString() {
         return "UpdateTracePointRequest{" +
@@ -103,6 +112,7 @@ public class UpdateTracePointRequest extends BaseRequest {
                 ", disable=" + disable +
                 ", id='" + id + '\'' +
                 ", client='" + client + '\'' +
+                ", predefined=" + predefined +
                 '}';
     }
 

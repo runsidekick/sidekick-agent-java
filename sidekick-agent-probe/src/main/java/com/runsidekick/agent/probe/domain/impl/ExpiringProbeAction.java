@@ -24,14 +24,16 @@ public class ExpiringProbeAction<C extends ProbeContext> extends DelegatedProbeA
     protected boolean checkWhetherExpired(Probe probe) {
         C context = getContext();
         if (context != null) {
-            int expireCount = context.getExpireCount();
-            if (expireCount > 0) {
-                long callCount = callCounter.incrementAndGet();
-                if (callCount >= expireCount) {
-                    if (callCount == expireCount) {
-                        context.expire();
+            if (!context.isPredefined()) {
+                int expireCount = context.getExpireCount();
+                if (expireCount > 0) {
+                    long callCount = callCounter.incrementAndGet();
+                    if (callCount >= expireCount) {
+                        if (callCount == expireCount) {
+                            context.expire();
+                        }
+                        return true;
                     }
-                    return true;
                 }
             }
         }

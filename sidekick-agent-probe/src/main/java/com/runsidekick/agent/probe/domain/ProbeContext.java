@@ -18,4 +18,8 @@ public interface ProbeContext {
     default void expire() {
     }
 
+    default boolean isPredefined() {
+        return false;
+    }
+
 }

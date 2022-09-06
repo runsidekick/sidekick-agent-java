@@ -17,24 +17,16 @@ public class TracePoint {
     private int expireSecs;
     private int expireCount;
     private boolean tracingEnabled;
-    protected String fileHash;
-
-    public String getFileHash() {
-        return fileHash;
-    }
-
-    public void setFileHash(String fileHash) {
-        this.fileHash = fileHash;
-    }
-
+    private String fileHash;
     private boolean disabled;
+    private boolean predefined;
 
     public TracePoint() {
     }
 
     public TracePoint(String id, String fileName, String className, int lineNo, String client,
                       String conditionExpression, int expireSecs, int expireCount,
-                      boolean tracingEnabled, boolean disabled) {
+                      boolean tracingEnabled, boolean disabled, boolean predefined) {
         this.id = id;
         this.fileName = fileName;
         this.className = className;
@@ -45,6 +37,7 @@ public class TracePoint {
         this.expireCount = expireCount;
         this.tracingEnabled = tracingEnabled;
         this.disabled = disabled;
+        this.predefined = predefined;
     }
 
     public String getId() {
@@ -111,6 +104,14 @@ public class TracePoint {
         this.expireCount = expireCount;
     }
 
+    public String getFileHash() {
+        return fileHash;
+    }
+
+    public void setFileHash(String fileHash) {
+        this.fileHash = fileHash;
+    }
+
     public boolean isTracingEnabled() {
         return tracingEnabled;
     }
@@ -127,6 +128,14 @@ public class TracePoint {
         this.disabled = disabled;
     }
 
+    public boolean isPredefined() {
+        return predefined;
+    }
+
+    public void setPredefined(boolean predefined) {
+        this.predefined = predefined;
+    }
+
     @Override
     public String toString() {
         return "TracePoint{" +
@@ -140,6 +149,7 @@ public class TracePoint {
                 ", expireCount=" + expireCount +
                 ", tracingEnabled=" + tracingEnabled +
                 ", disabled=" + disabled +
+                ", predefined=" + predefined +
                 '}';
     }
 

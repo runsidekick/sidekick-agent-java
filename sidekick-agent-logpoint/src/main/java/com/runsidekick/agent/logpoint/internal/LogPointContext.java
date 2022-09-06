@@ -23,10 +23,11 @@ class LogPointContext implements ProbeContext {
     volatile ScheduledFuture expireFuture;
     volatile boolean disabled;
     volatile boolean removed;
+    volatile boolean predefined;
 
     LogPointContext(Probe probe, String id,
                     String logExpression, String conditionExpression, int expireSecs, int expireCount,
-                    Condition condition, boolean disabled, boolean stdoutEnabled, String logLevel) {
+                    Condition condition, boolean disabled, boolean stdoutEnabled, String logLevel, boolean predefined) {
         this.probe = probe;
         this.id = id;
         this.logExpression = logExpression;
@@ -37,6 +38,7 @@ class LogPointContext implements ProbeContext {
         this.disabled = disabled;
         this.stdoutEnabled = stdoutEnabled;
         this.logLevel = logLevel;
+        this.predefined = predefined;
     }
 
     @Override
@@ -53,6 +55,11 @@ class LogPointContext implements ProbeContext {
     public void expire() {
         cancelExpireScheduleIfExist();
         expireFuture = LogPointManager.scheduledExpireTask(this);
+    }
+
+    @Override
+    public boolean isPredefined() {
+        return predefined;
     }
 
     public String getLogExpression() {

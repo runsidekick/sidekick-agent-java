@@ -124,7 +124,8 @@ public final class TracePointManager {
                                             context.expireSecs,
                                             context.expireCount,
                                             context.enableTracing,
-                                            context.disabled);
+                                            context.disabled,
+                                            context.predefined);
                             tracePoints.add(tracePoint);
                         }
                     });
@@ -134,7 +135,7 @@ public final class TracePointManager {
 
     public static void putTracePoint(String id, String fileName, String className, int lineNo, String client,
                                      String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing, boolean disable) {
+                                     boolean enableTracing, boolean disable, boolean predefined) {
         LOGGER.debug(
                 "Putting tracepoint with id {} to class {} on line {} from client {}",
                 id, className, lineNo, client);
@@ -170,7 +171,7 @@ public final class TracePointManager {
                     new TracePointContext(
                             probe, id, conditionExpression,
                             expireSecs, expireCount, enableTracing,
-                            condition, disable);
+                            condition, disable, predefined);
             ProbeAction<TracePointContext> action = createTracePointAction(context);
 
             boolean added = ProbeSupport.addProbeAction(probe, action) == null;
@@ -183,7 +184,7 @@ public final class TracePointManager {
 
             tracePointProbeMap.put(id, probe);
 
-            if (expireSecs > 0) {
+            if (expireSecs > 0 && !predefined) {
                 context.expireFuture =
                         tracePointExpireScheduler.schedule(
                                 new TracePointExpireTask(context), expireSecs, TimeUnit.SECONDS);
@@ -206,7 +207,7 @@ public final class TracePointManager {
 
     public static synchronized void updateTracePoint(String id, String client,
                                                      String conditionExpression, int expireSecs, int expireCount,
-                                                     boolean enableTracing, boolean disable) {
+                                                     boolean enableTracing, boolean disable, boolean predefined) {
         LOGGER.debug(
                 "Updating tracepoint with id {} from client {}",
                 id, client);
@@ -243,7 +244,7 @@ public final class TracePointManager {
                     new TracePointContext(
                             probe, id, conditionExpression,
                             expireSecs, expireCount, enableTracing,
-                            condition, disable);
+                            condition, disable, predefined);
             ProbeAction<TracePointContext> action = createTracePointAction(context);
 
             ProbeAction<TracePointContext> existingAction = ProbeSupport.replaceProbeAction(probe, action);
@@ -253,7 +254,7 @@ public final class TracePointManager {
                         id, client);
                 throw new CodedException(TracePointErrorCodes.NO_TRACEPOINT_EXIST_WITH_ID, id, client);
             }
-            if (expireSecs > 0) {
+            if (expireSecs > 0 && !predefined) {
                 context.expireFuture =
                         tracePointExpireScheduler.schedule(
                                 new TracePointExpireTask(context), expireSecs, TimeUnit.SECONDS);
