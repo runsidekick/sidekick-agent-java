@@ -37,7 +37,7 @@ public class TracePointAPIServiceImpl implements TracePointAPIService {
     public String putTracePoint(String className, int lineNo, String client,
                                 String fileHash, String conditionExpression,
                                 int expireSecs, int expireCount,
-                                boolean enableTracing) {
+                                boolean enableTracing, boolean disable) {
         if (StringUtils.isNullOrEmpty(client)) {
             client = CLIENT;
         }
@@ -46,7 +46,7 @@ public class TracePointAPIServiceImpl implements TracePointAPIService {
                 id, className, lineNo, client,
                 fileHash, conditionExpression,
                 expireSecs, expireCount,
-                enableTracing);
+                enableTracing, disable);
         return id;
     }
 

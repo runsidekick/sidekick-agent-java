@@ -13,7 +13,7 @@ public interface LogPointAPIService {
 
     String putLogPoint(String className, int lineNo, String client, String logExpression,
                        String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                       boolean stdoutEnabled, String logLevel);
+                       boolean stdoutEnabled, String logLevel, boolean disable);
 
     void updateLogPoint(String id, String client, String logExpression,
                         String conditionExpression, int expireSecs, int expireCount, boolean disable,

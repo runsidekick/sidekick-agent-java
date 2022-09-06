@@ -63,14 +63,14 @@ public final class TracePointSupport {
 
     public static void putTracePoint(String id, String className, int lineNo, String client,
                                      String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing) {
+                                     boolean enableTracing, boolean disable) {
         putTracePoint(id, null, className, lineNo, client, fileHash,
-                conditionExpression, expireSecs, expireCount, enableTracing);
+                conditionExpression, expireSecs, expireCount, enableTracing, disable);
     }
 
     public static void putTracePoint(String id, String fileName, String className, int lineNo, String client,
                                      String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing) {
+                                     boolean enableTracing, boolean disable) {
         if (client == null) {
             client = BrokerManager.BROKER_CLIENT;
         }
@@ -86,7 +86,7 @@ public final class TracePointSupport {
         }
         TracePointManager.putTracePoint(
                 id, fileName, className, lineNo, client, fileHash, conditionExpression,
-                expireSecs, expireCount, enableTracing);
+                expireSecs, expireCount, enableTracing, disable);
     }
 
     public static void updateTracePoint(String id, String client,

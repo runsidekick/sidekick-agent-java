@@ -96,7 +96,7 @@ public class TracePointSnapshotExtension
                 String tracePointId = TracePointAPI.putTracePoint(
                         tracePoint.className, tracePoint.lineNo,
                         null, tracePoint.conditionExpression,
-                        TracePointAPI.TRACEPOINT_MAX_EXPIRY_COUNT, TracePointAPI.TRACEPOINT_MAX_EXPIRY_SECS, true);
+                        TracePointAPI.TRACEPOINT_MAX_EXPIRY_COUNT, TracePointAPI.TRACEPOINT_MAX_EXPIRY_SECS, true, false);
                 tracePointMap.put(tracePointId, tracePoint);
             } catch (Exception ex) {
                 LOGGER.severe(String.format(

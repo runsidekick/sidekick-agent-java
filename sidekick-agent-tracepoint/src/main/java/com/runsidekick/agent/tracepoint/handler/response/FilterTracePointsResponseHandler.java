@@ -46,7 +46,8 @@ public class FilterTracePointsResponseHandler
                     tracePoint.getConditionExpression(),
                     tracePoint.getExpireSecs(),
                     tracePoint.getExpireCount(),
-                    true);
+                    tracePoint.isTracingEnabled(),
+                    tracePoint.isDisabled());
             BrokerManager.publishApplicationStatus();
             if (tracePoint.getClient() != null) {
                 BrokerManager.publishApplicationStatus(tracePoint.getClient());

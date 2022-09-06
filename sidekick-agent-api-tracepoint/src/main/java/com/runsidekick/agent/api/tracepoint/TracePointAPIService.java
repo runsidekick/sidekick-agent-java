@@ -12,7 +12,7 @@ public interface TracePointAPIService {
 
     String putTracePoint(String className, int lineNo, String client,
                          String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                         boolean enableTracing);
+                         boolean enableTracing, boolean disable);
     void updateTracePoint(String id, String client,
                           String conditionExpression, int expireSecs, int expireCount,
                           boolean enableTracing, boolean disable);
