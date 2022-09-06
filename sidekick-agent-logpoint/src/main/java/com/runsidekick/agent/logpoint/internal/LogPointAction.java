@@ -80,7 +80,7 @@ class LogPointAction implements ProbeAction<LogPointContext> {
 
         String logMessage = expressionExecutor.execute(logExpression, serializedVariables);
 
-        this.dataRedactionManager.redactLogMessage(fileName, line, methodName,
+        logMessage = this.dataRedactionManager.redactLogMessage(fileName, line, methodName,
                 serializedVariables, logExpression, logMessage);
 
         LogPointEvent logPointEvent =
