@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.runsidekick.agent.api.dataredaction.DataRedactionContext;
+import com.runsidekick.agent.api.dataredaction.DataRedactionHelper;
 import com.runsidekick.agent.serialization.SerializationHelper;
 
 import java.io.IOException;
@@ -60,6 +62,10 @@ public class Variable {
         }
 
         public static String serializeVariable(Variable variable) {
+            return serializeVariable(variable, null);
+        }
+
+        public static String serializeVariable(Variable variable, DataRedactionContext dataRedactionContext) {
             String serializedValue;
             try {
                 boolean skipValueFromSerialization =
@@ -68,6 +74,7 @@ public class Variable {
                     serializedValue = SerializationHelper.wrapAsIgnored(
                             SerializationHelper.SKIPPED_VALUE_SERIALIZATION_MESSAGE);
                 } else {
+                    DataRedactionHelper.redactVariable(dataRedactionContext);
                     serializedValue = SerializationHelper.serializeValue(variable.value);
                 }
             } catch (Throwable t) {

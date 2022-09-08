@@ -5,8 +5,6 @@ import com.runsidekick.agent.broker.error.CodedException;
 import com.runsidekick.agent.core.logger.LoggerFactory;
 import com.runsidekick.agent.core.util.ExecutorUtils;
 import com.runsidekick.agent.core.util.StringUtils;
-import com.runsidekick.agent.dataredaction.DataRedactionManager;
-import com.runsidekick.agent.dataredaction.impl.DataRedactionManagerImpl;
 import com.runsidekick.agent.probe.ProbeSupport;
 import com.runsidekick.agent.probe.condition.Condition;
 import com.runsidekick.agent.probe.domain.Probe;
@@ -37,7 +35,6 @@ public final class TracePointManager {
     private static final Map<String, Probe> tracePointProbeMap = new ConcurrentHashMap<>();
     private static final ScheduledExecutorService tracePointExpireScheduler =
             ExecutorUtils.newScheduledExecutorService("tracepoint-expire-scheduler");
-    private static final DataRedactionManager DATA_REDUCTION_MANAGER = new DataRedactionManagerImpl();
     private static boolean initialized;
 
     private TracePointManager() {
@@ -64,7 +61,7 @@ public final class TracePointManager {
         return new ConditionAwareProbeAction<>(
                 new RateLimitedProbeAction<>(
                     new ExpiringProbeAction<>(
-                            new TracePointAction(context, DATA_REDUCTION_MANAGER)
+                            new TracePointAction(context)
                     )
                 )
         );

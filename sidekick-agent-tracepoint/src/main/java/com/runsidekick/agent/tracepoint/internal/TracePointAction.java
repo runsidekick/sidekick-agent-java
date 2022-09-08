@@ -1,9 +1,9 @@
 package com.runsidekick.agent.tracepoint.internal;
 
+import com.runsidekick.agent.api.dataredaction.DataRedactionContext;
 import com.runsidekick.agent.broker.error.CodedException;
 import com.runsidekick.agent.broker.error.CommonErrorCodes;
 import com.runsidekick.agent.core.logger.LoggerFactory;
-import com.runsidekick.agent.dataredaction.DataRedactionManager;
 import com.runsidekick.agent.probe.domain.Probe;
 import com.runsidekick.agent.probe.domain.ProbeAction;
 import com.runsidekick.agent.probe.domain.Variable;
@@ -34,11 +34,8 @@ class TracePointAction implements ProbeAction<TracePointContext> {
 
     private final TracePointContext context;
 
-    private final DataRedactionManager dataRedactionManager;
-
-    TracePointAction(TracePointContext context, DataRedactionManager dataRedactionManager) {
+    TracePointAction(TracePointContext context) {
         this.context = context;
-        this.dataRedactionManager = dataRedactionManager;
     }
 
     @Override
@@ -57,6 +54,9 @@ class TracePointAction implements ProbeAction<TracePointContext> {
                                          Object callee, String[] localVarNames, Object[] localVarValues) {
         List<Variable> variableList = new ArrayList<>(localVarNames.length + 1);
 
+        DataRedactionContext dataRedactionContext = new DataRedactionContext(
+                clazz, fileName, className, line, methodName);
+
         if (callee != null) {
             variableList.add(new Variable("this", callee));
         }
@@ -71,7 +71,7 @@ class TracePointAction implements ProbeAction<TracePointContext> {
         }
         Map<String, String> serializedVariables = new LinkedHashMap<>(variableList.size());
         for (Variable variable : variableList) {
-            String serializedValue = Variable.VariableSerializer.serializeVariable(variable);
+            String serializedValue = Variable.VariableSerializer.serializeVariable(variable, dataRedactionContext);
             serializedVariables.put(variable.getName(), serializedValue);
         }
 
@@ -89,8 +89,6 @@ class TracePointAction implements ProbeAction<TracePointContext> {
         Throwable throwable = new Throwable();
 
         TracePointSupport.publishTracePointEvent(() -> {
-
-            this.dataRedactionManager.redactFrameData(serializedVariables);
 
             StackTraceElement[] stackTraceElements = stackTraceProvider.getStackTrace(throwable, 3);
             List<Frame> frames = new ArrayList<>(stackTraceElements.length);

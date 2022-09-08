@@ -22,15 +22,19 @@
         <!-- ========================================== -->
         <dependency>
             <groupId>com.runsidekick.agent</groupId>
+            <artifactId>sidekick-agent-api-data-redaction</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.runsidekick.agent</groupId>
+            <artifactId>sidekick-agent-api-serialization</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.runsidekick.agent</groupId>
             <artifactId>sidekick-agent-broker</artifactId>
         </dependency>
         <dependency>
             <groupId>com.runsidekick.agent</groupId>
             <artifactId>sidekick-agent-instrument</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.runsidekick.agent</groupId>
-            <artifactId>sidekick-agent-serialization</artifactId>
         </dependency>
         <!-- ========================================== -->
 
