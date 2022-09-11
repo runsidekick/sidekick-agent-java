@@ -20,6 +20,10 @@
             <groupId>com.runsidekick.agent</groupId>
             <artifactId>sidekick-agent-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.runsidekick.agent</groupId>
+            <artifactId>sidekick-agent-data-redaction</artifactId>
+        </dependency>
         <!-- ========================================== -->
 
         <!-- 3rd party dependencies                     -->

@@ -1,10 +1,10 @@
 package com.runsidekick.agent.logpoint.internal;
 
 import com.runsidekick.agent.api.dataredaction.DataRedactionContext;
-import com.runsidekick.agent.api.dataredaction.DataRedactionHelper;
 import com.runsidekick.agent.broker.error.CodedException;
 import com.runsidekick.agent.broker.error.CommonErrorCodes;
 import com.runsidekick.agent.core.logger.LoggerFactory;
+import com.runsidekick.agent.dataredaction.DataRedactionHelper;
 import com.runsidekick.agent.logpoint.LogPointSupport;
 import com.runsidekick.agent.logpoint.event.LogPointEvent;
 import com.runsidekick.agent.logpoint.event.LogPointFailedEvent;

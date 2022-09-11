@@ -1,11 +1,14 @@
-package com.runsidekick.agent.api.dataredaction;
+package com.runsidekick.agent.dataredaction;
 
+import com.runsidekick.agent.api.dataredaction.DataRedactionContext;
+import com.runsidekick.agent.api.dataredaction.SidekickDataRedactionAPI;
 import com.runsidekick.agent.core.logger.LoggerFactory;
 import com.runsidekick.agent.core.util.PropertyUtils;
 import com.runsidekick.agent.core.util.StringUtils;
 import org.slf4j.Logger;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
@@ -22,15 +25,16 @@ public final class DataRedactionHelper {
     private static final String DATA_REDACTION_IMPL_CLASS =
             PropertyUtils.getStringProperty("sidekick.agent.dataredactionimplclass");
 
-    public static void redactVariable(DataRedactionContext dataRedactionContext) {
+    public static Object redactVariable(DataRedactionContext dataRedactionContext, String varName, Object varValue) {
         if (!StringUtils.isNullOrEmpty(DATA_REDACTION_IMPL_CLASS)) {
             try {
                 SidekickDataRedactionAPI dataRedactionInstance = getDataRedactionInstance(dataRedactionContext);
-                dataRedactionInstance.test();
+                return dataRedactionInstance.redactVariableValue(dataRedactionContext, varName, varValue);
             } catch (Exception ex) {
                 LOGGER.error(String.format("Unable to redact variable", ex.getMessage()));
             }
         }
+        return varValue;
     }
 
     public static String redactLogMessage(
@@ -39,7 +43,8 @@ public final class DataRedactionHelper {
         if (!StringUtils.isNullOrEmpty(DATA_REDACTION_IMPL_CLASS)) {
             try {
                 SidekickDataRedactionAPI dataRedactionInstance = getDataRedactionInstance(dataRedactionContext);
-                dataRedactionInstance.test();
+                return dataRedactionInstance.redactLogMessage(dataRedactionContext, serializedVariables, logExpression,
+                        logMessage);
             } catch (Exception ex) {
                 LOGGER.error(String.format("Unable to redact log message", ex.getMessage()));
             }

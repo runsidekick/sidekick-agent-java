@@ -76,6 +76,7 @@
         <module>sidekick-agent-instrument</module>
 
         <module>sidekick-agent-broker</module>
+        <module>sidekick-agent-data-redaction</module>
         <module>sidekick-agent-logpoint</module>
         <module>sidekick-agent-probe</module>
         <module>sidekick-agent-tracepoint</module>
@@ -113,6 +114,11 @@
             <dependency>
                 <groupId>com.runsidekick.agent</groupId>
                 <artifactId>sidekick-agent-api-logpoint</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-data-redaction</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
             <dependency>

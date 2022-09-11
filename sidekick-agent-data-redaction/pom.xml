@@ -10,10 +10,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.runsidekick.agent</groupId>
-    <artifactId>sidekick-agent-api-data-redaction</artifactId>
-    <name>sidekick-agent-api-data-redaction</name>
+    <artifactId>sidekick-agent-data-redaction</artifactId>
+    <name>sidekick-agent-data-redaction</name>
 
     <dependencies>
+        <dependency>
+            <groupId>com.runsidekick.agent</groupId>
+            <artifactId>sidekick-agent-api-data-redaction</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.runsidekick.agent</groupId>
+            <artifactId>sidekick-agent-core</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

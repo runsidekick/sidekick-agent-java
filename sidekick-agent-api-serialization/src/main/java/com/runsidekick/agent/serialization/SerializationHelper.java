@@ -38,6 +38,7 @@ import com.fasterxml.jackson.databind.util.NameTransformer;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.runsidekick.agent.core.logger.LoggerFactory;
 import com.runsidekick.agent.core.util.PropertyUtils;
+import com.runsidekick.agent.dataredaction.DataRedactionHelper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 
