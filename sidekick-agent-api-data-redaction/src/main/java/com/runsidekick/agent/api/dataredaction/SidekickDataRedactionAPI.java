@@ -7,10 +7,8 @@ import java.util.Map;
  */
 public interface SidekickDataRedactionAPI {
 
-    Object redactVariableValue(DataRedactionContext dataRedactionContext, String varName, Object varValue)
-            throws Exception;
-
     String redactLogMessage(DataRedactionContext dataRedactionContext, Map<String, String> serializedVariables,
                             String logExpression, String logMessage) throws Exception;
 
+    boolean shouldRedactVariable(DataRedactionContext dataRedactionContext, String fieldName);
 }

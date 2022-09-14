@@ -74,10 +74,11 @@ public class Variable {
                     serializedValue = SerializationHelper.wrapAsIgnored(
                             SerializationHelper.SKIPPED_VALUE_SERIALIZATION_MESSAGE);
                 } else {
-                    Object variableValue = DataRedactionHelper.redactVariable(
-                            dataRedactionContext, variable.name, variable.value);
-
-                    serializedValue = SerializationHelper.serializeValue(variableValue);
+                    if (DataRedactionHelper.shouldRedactVariable(dataRedactionContext, variable.name)) {
+                        serializedValue = SerializationHelper.wrapAsRedacted();
+                    } else {
+                        serializedValue = SerializationHelper.serializeValue(variable.value, dataRedactionContext);
+                    }
                 }
             } catch (Throwable t) {
                 String serializationErrorMessage = SerializationHelper.generateSerializationErrorMessage(t);

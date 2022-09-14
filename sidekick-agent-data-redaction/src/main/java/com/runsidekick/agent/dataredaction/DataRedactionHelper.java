@@ -7,8 +7,6 @@ import com.runsidekick.agent.core.util.PropertyUtils;
 import com.runsidekick.agent.core.util.StringUtils;
 import org.slf4j.Logger;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
@@ -25,16 +23,18 @@ public final class DataRedactionHelper {
     private static final String DATA_REDACTION_IMPL_CLASS =
             PropertyUtils.getStringProperty("sidekick.agent.dataredactionimplclass");
 
-    public static Object redactVariable(DataRedactionContext dataRedactionContext, String varName, Object varValue) {
+    public static boolean shouldRedactVariable(DataRedactionContext dataRedactionContext, String fieldName) {
         if (!StringUtils.isNullOrEmpty(DATA_REDACTION_IMPL_CLASS)) {
-            try {
-                SidekickDataRedactionAPI dataRedactionInstance = getDataRedactionInstance(dataRedactionContext);
-                return dataRedactionInstance.redactVariableValue(dataRedactionContext, varName, varValue);
-            } catch (Exception ex) {
-                LOGGER.error(String.format("Unable to redact variable", ex.getMessage()));
+            if (fieldName != null) {
+                try {
+                    SidekickDataRedactionAPI dataRedactionInstance = getDataRedactionInstance(dataRedactionContext);
+                    return dataRedactionInstance.shouldRedactVariable(dataRedactionContext, fieldName);
+                } catch (Exception ex) {
+                    LOGGER.error(String.format("Unable to redact variable", ex.getMessage()));
+                }
             }
         }
-        return varValue;
+        return false;
     }
 
     public static String redactLogMessage(
@@ -54,10 +54,14 @@ public final class DataRedactionHelper {
 
     private static SidekickDataRedactionAPI getDataRedactionInstance(DataRedactionContext dataRedactionContext)
             throws Exception {
-        Class dataRedactionImplClazz = Class.forName(DATA_REDACTION_IMPL_CLASS, false,
-                dataRedactionContext.getClazz().getClassLoader());
-        Constructor<?> ctor = dataRedactionImplClazz.getConstructor();
-        return (SidekickDataRedactionAPI) ctor.newInstance(new Object[]{});
+        Class dataRedactionImplClazz;
+        if (dataRedactionContext != null) {
+            dataRedactionImplClazz = Class.forName(DATA_REDACTION_IMPL_CLASS, false,
+                    dataRedactionContext.getClazz().getClassLoader());
+        } else {
+            dataRedactionImplClazz = Class.forName(DATA_REDACTION_IMPL_CLASS);
+        }
+        Object dataRedactionImplInstance = dataRedactionImplClazz.getConstructor().newInstance(new Object[]{});
+        return (SidekickDataRedactionAPI) dataRedactionImplInstance;
     }
-
 }
