@@ -1,4 +1,4 @@
-package com.runsidekick.agent.serialization;
+package com.runsidekick.agent.probe.serialization;
 
 import com.fasterxml.jackson.core.util.BufferRecycler;
 import com.fasterxml.jackson.core.util.TextBuffer;

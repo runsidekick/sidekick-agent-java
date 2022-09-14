@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.runsidekick.agent.api.dataredaction.DataRedactionContext;
 import com.runsidekick.agent.dataredaction.DataRedactionHelper;
-import com.runsidekick.agent.serialization.SerializationHelper;
+import com.runsidekick.agent.probe.serialization.SerializationHelper;
 
 import java.io.IOException;
 
