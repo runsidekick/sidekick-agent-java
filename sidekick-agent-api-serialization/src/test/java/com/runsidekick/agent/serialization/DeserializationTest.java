@@ -96,7 +96,7 @@ public class DeserializationTest {
     }
 
     public static void main(String[] args) throws Exception {
-        String json = SerializationHelper.serializeValue(new X());
+        String json = SerializationHelper.serializeValue(new X(), null);
         System.out.println(json);
         DeserializationHelper.Variable var = DeserializationHelper.parseVariable(json);
         System.out.println(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(var));
