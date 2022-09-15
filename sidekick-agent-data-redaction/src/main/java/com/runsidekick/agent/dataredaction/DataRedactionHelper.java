@@ -33,7 +33,7 @@ public final class DataRedactionHelper {
                             dataRedactionContext.getClazz().getClassLoader());
                     return dataRedactionInstance.shouldRedactVariable(dataRedactionContext, fieldName);
                 } catch (Exception ex) {
-                    LOGGER.error(String.format("Unable to redact variable", ex));
+                    LOGGER.error("Unable to redact variable", ex);
                 }
             }
         }
@@ -50,7 +50,7 @@ public final class DataRedactionHelper {
                 return dataRedactionInstance.redactLogMessage(dataRedactionContext, serializedVariables, logExpression,
                         logMessage);
             } catch (Exception ex) {
-                LOGGER.error(String.format("Unable to redact log message", ex));
+                LOGGER.error("Unable to redact log message", ex);
             }
         }
         return logMessage;
