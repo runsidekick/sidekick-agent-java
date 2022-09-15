@@ -8,8 +8,6 @@ import com.runsidekick.agent.core.util.StringUtils;
 import com.runsidekick.agent.core.util.map.ConcurrentWeakMap;
 import org.slf4j.Logger;
 
-import java.util.Map;
-
 /**
  * @author yasin.kalafat
  */
@@ -59,7 +57,7 @@ public final class DataRedactionHelper {
         if (dataRedactionContext != null && dataRedactionContext.getClazz() != null) {
             return dataRedactionContext.getClazz().getClassLoader();
         }
-        return DataRedactionHelper.class.getClassLoader();
+        return ClassLoader.getSystemClassLoader();
     }
 
     private static SidekickDataRedactionAPI getDataRedactionInstance(ClassLoader classLoader) throws Exception {

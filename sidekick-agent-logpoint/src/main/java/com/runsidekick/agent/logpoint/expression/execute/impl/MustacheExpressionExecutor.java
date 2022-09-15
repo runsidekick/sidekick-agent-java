@@ -38,19 +38,23 @@ public class MustacheExpressionExecutor implements LogPointExpressionExecutor {
     @Override
     public String execute(DataRedactionContext dataRedactionContext, String expression, Map<String, Object> variables) {
         threadLocalDataRedactionContext.set(dataRedactionContext);
-        StringWriter writer = threadLocalWriter.get();
-        writer.getBuffer().setLength(0);
-        Mustache mustache = expressionMap.get(expression);
-        if (mustache == null) {
-            mustache = mf.compile(new StringReader(expression), UUID.randomUUID().toString());
-            Mustache existingMustache = expressionMap.putIfAbsent(expression, mustache);
-            if (existingMustache != null) {
-                mustache = existingMustache;
+        try {
+            StringWriter writer = threadLocalWriter.get();
+            writer.getBuffer().setLength(0);
+            Mustache mustache = expressionMap.get(expression);
+            if (mustache == null) {
+                mustache = mf.compile(new StringReader(expression), UUID.randomUUID().toString());
+                Mustache existingMustache = expressionMap.putIfAbsent(expression, mustache);
+                if (existingMustache != null) {
+                    mustache = existingMustache;
+                }
             }
+            mustache.execute(writer, variables);
+            writer.flush();
+            return writer.getBuffer().toString();
+        } finally {
+            threadLocalDataRedactionContext.remove();
         }
-        mustache.execute(writer, variables);
-        writer.flush();
-        return writer.getBuffer().toString();
     }
 
     private static ReflectionObjectHandler createObjectHandler() {
@@ -70,7 +74,9 @@ public class MustacheExpressionExecutor implements LogPointExpressionExecutor {
 
             @Override
             protected AccessibleObject findMember(Class sClass, String name) {
-                if (DataRedactionHelper.shouldRedactVariable(threadLocalDataRedactionContext.get(), name)) {
+                DataRedactionContext dataRedactionContext = threadLocalDataRedactionContext.get();
+                if (dataRedactionContext != null &&
+                        DataRedactionHelper.shouldRedactVariable(dataRedactionContext, name)) {
                     return null;
                 }
                 return super.findMember(sClass, name);
