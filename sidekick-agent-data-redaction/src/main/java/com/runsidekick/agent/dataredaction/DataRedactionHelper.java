@@ -30,7 +30,7 @@ public final class DataRedactionHelper {
             if (fieldName != null) {
                 try {
                     SidekickDataRedactionAPI dataRedactionInstance = getDataRedactionInstance(
-                            dataRedactionContext.getClazz().getClassLoader());
+                            getClassLoader(dataRedactionContext));
                     return dataRedactionInstance.shouldRedactVariable(dataRedactionContext, fieldName);
                 } catch (Exception ex) {
                     LOGGER.error("Unable to redact variable", ex);
@@ -41,13 +41,12 @@ public final class DataRedactionHelper {
     }
 
     public static String redactLogMessage(
-            DataRedactionContext dataRedactionContext, Map<String, String> serializedVariables, String logExpression,
-            String logMessage) {
+            DataRedactionContext dataRedactionContext, String logExpression, String logMessage) {
         if (!StringUtils.isNullOrEmpty(DATA_REDACTION_IMPL_CLASS)) {
             try {
                 SidekickDataRedactionAPI dataRedactionInstance = getDataRedactionInstance(
-                        dataRedactionContext.getClazz().getClassLoader());
-                return dataRedactionInstance.redactLogMessage(dataRedactionContext, serializedVariables, logExpression,
+                        getClassLoader(dataRedactionContext));
+                return dataRedactionInstance.redactLogMessage(dataRedactionContext, logExpression,
                         logMessage);
             } catch (Exception ex) {
                 LOGGER.error("Unable to redact log message", ex);
@@ -56,6 +55,12 @@ public final class DataRedactionHelper {
         return logMessage;
     }
 
+    private static ClassLoader getClassLoader(DataRedactionContext dataRedactionContext) {
+        if (dataRedactionContext != null && dataRedactionContext.getClazz() != null) {
+            return dataRedactionContext.getClazz().getClassLoader();
+        }
+        return DataRedactionHelper.class.getClassLoader();
+    }
 
     private static SidekickDataRedactionAPI getDataRedactionInstance(ClassLoader classLoader) throws Exception {
         SidekickDataRedactionAPI sidekickDataRedactionAPI = sidekickDataRedactionAPICache.get(classLoader);

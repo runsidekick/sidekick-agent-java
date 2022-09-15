@@ -71,16 +71,9 @@ class LogPointAction implements ProbeAction<LogPointContext> {
             variables.put(localVarName, localVarValue);
         }
 
-        Map<String, String> serializedVariables = new LinkedHashMap<>(variableList.size());
-        for (Variable variable : variableList) {
-            String serializedValue = Variable.VariableSerializer.serializeVariable(variable, dataRedactionContext);
-            serializedVariables.put(variable.getName(), serializedValue);
-        }
+        String logMessage = expressionExecutor.execute(dataRedactionContext, logExpression, variables);
 
-        String logMessage = expressionExecutor.execute(logExpression, serializedVariables);
-
-        logMessage = DataRedactionHelper.redactLogMessage(dataRedactionContext, serializedVariables,
-                logExpression, logMessage);
+        logMessage = DataRedactionHelper.redactLogMessage(dataRedactionContext, logExpression, logMessage);
 
         LogPointEvent logPointEvent =
                 new LogPointEvent(logPointId,

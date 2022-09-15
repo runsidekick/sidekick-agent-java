@@ -1,14 +1,14 @@
 package com.runsidekick.agent.api.dataredaction;
 
-import java.util.Map;
-
 /**
  * @author yasin.kalafat
  */
 public interface SidekickDataRedactionAPI {
 
-    String redactLogMessage(DataRedactionContext dataRedactionContext, Map<String, String> serializedVariables,
-                            String logExpression, String logMessage) throws Exception;
+    default String redactLogMessage(DataRedactionContext dataRedactionContext,
+                                    String logExpression, String logMessage) {
+        return logMessage;
+    }
 
     boolean shouldRedactVariable(DataRedactionContext dataRedactionContext, String fieldName);
 }

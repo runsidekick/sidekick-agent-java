@@ -1,5 +1,6 @@
 package com.runsidekick.agent.logpoint.expression.execute.impl;
 
+import com.runsidekick.agent.api.dataredaction.DataRedactionContext;
 import com.runsidekick.agent.core.util.map.ConcurrentWeakMap;
 import com.runsidekick.agent.logpoint.expression.execute.LogPointExpressionExecutor;
 import org.springframework.context.expression.MapAccessor;
@@ -18,7 +19,8 @@ public class SpelExpressionExecutor implements LogPointExpressionExecutor {
     private static final ConcurrentWeakMap<String, Expression> expressionMap = new ConcurrentWeakMap();
 
     @Override
-    public String execute(String expression, Map<String, String> variables) {
+    public String execute(DataRedactionContext dataRedactionContext, String expression, Map<String, Object> variables) {
+        // TODO data redaction implementation
         StandardEvaluationContext context = new StandardEvaluationContext(variables);
         context.addPropertyAccessor(new MapAccessor());
 
