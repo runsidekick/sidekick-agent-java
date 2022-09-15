@@ -97,21 +97,23 @@ To learn more about Sidekick features and capabilities, see our [web page.](http
 
 ## Sidekick Java Agent
 
-Sidekick Java agent allows you inject trace points (non-breaking breakpoints) and log points dynamically to capture call stack snapshots (with variables) and add log messages on the fly without code modification, re-build and re-deploy. So it helps you, your team and organization to reduce MTTR (Minimum Time to Repair/Resolve).
+Sidekick Java agent allows you to inject tracepoints (non-breaking breakpoints) and log points dynamically to capture call stack snapshots (with variables) and add log messages on the fly without code modification, re-build and re-deploy. So it helps you, your team, and your organization to reduce MTTR (Minimum Time to Repair/Resolve).
 
-To achieve this, Sidekick Java agent has nothing to do with JDWP (Java Debug Wire Protocol), as it doesn't suspend the code execution, but hooks into code execution at application layer by bytecode instrumentation. Under the hood, Sidekick agent
-- injects its hook call into the specified line at bytecode level 
+To achieve this, the Sidekick Java agent has nothing to do with JDWP (Java Debug Wire Protocol), as it doesn't suspend the code execution, but hooks into code execution at the application layer by bytecode instrumentation. Under the hood, Sidekick agent
+- injects its hook call into the specified line at the bytecode level
 - intercepts the code execution just before the specified line
-- captures callstack snapshot (for trace point) or prints dynamic log message (for log point) 
-- creates event to be sent asynchronously
+- captures call stack snapshot (for tracepoint) or prints dynamic log message (for log point)
+- create events to be sent asynchronously
 - and then lets the code execution continue
 
-Here, to keep Sidekick agent overhead at mimimum (sub-millisecond on average), in addition to non-blocking event publishing, we apply many performance improvements like async snapshot taking, async call stack collecting and fast serialization by reducing redundant memory copies.
 
-The advantages of Sidekick over classical APM solutions is that, Sidekick 
+Here, to keep Sidekick agent overhead at a minimum (sub-millisecond on average), in addition to non-blocking event publishing, we apply many performance improvements like async snapshot taking, async call stack collecting, and fast serialization by reducing redundant memory copies.
+
+
+The advantage of Sidekick over classical APM solutions is that, Sidekick
 - can debug and trace any location (your code base or 3rd party dependency) in your application, not just the external (DB, API, etc ...) calls like APM solutions
-- has zero overhead when you don't have any trace point or log point but APMs have always
-- doesn't produce too much garbage data because it collects data only at the certain points you specified as long as that point (trace point/log point) is active
+- has zero overhead when you don't have any tracepoint or log point but APMs have always
+- doesn't produce too much garbage data because it collects data only at the certain points you specified as long as that point (tracepoint/logpoint) is active
 
 #### Benchmarks
 - [Production Debuggers — 2022 Benchmark Results](https://medium.com/runsidekick/sidekick-blog-production-debuggers-2022-benchmark-results-part-1-ec173d0f8ccd)
