@@ -17,7 +17,7 @@ public class MustacheTests implements SidekickDataRedactionAPI {
     static class X {
 
         Y y = new Y();
-        Y[] array = new Y[] {new Y()};
+        Y[] array = new Y[]{new Y()};
         List<Y> list = Arrays.asList(new Y());
         Map<String, Y> map = new HashMap<String, Y>() {{
             put("y", new Y());
@@ -41,26 +41,26 @@ public class MustacheTests implements SidekickDataRedactionAPI {
         Long l2 = 3l;
         Double d2 = 4.0;
 
-        String s  = "hello";
+        String s = "hello";
         E e = E.A;
         Z z = new Z();
 
-        boolean[] ba1 = new boolean[] {true};
-        byte[] ya1 = new byte[] {0};
-        int[] ia1 = new int[] {1};
-        float[] fa1 = new float[] {2.0f};
-        long[] la1 = new long[] {3l};
-        double[] da1 = new double[] {4.0d};
+        boolean[] ba1 = new boolean[]{true};
+        byte[] ya1 = new byte[]{0};
+        int[] ia1 = new int[]{1};
+        float[] fa1 = new float[]{2.0f};
+        long[] la1 = new long[]{3l};
+        double[] da1 = new double[]{4.0d};
 
-        Boolean[] ba2 = new Boolean[] {true};
-        Byte[] ya2 = new Byte[] {0};
-        Integer[] ia2 = new Integer[] {1};
-        Float[] fa2 = new Float[] {2.0f};
-        Long[] la2 = new Long[] {3l};
-        Double[] da2 = new Double[] {4.0d};
+        Boolean[] ba2 = new Boolean[]{true};
+        Byte[] ya2 = new Byte[]{0};
+        Integer[] ia2 = new Integer[]{1};
+        Float[] fa2 = new Float[]{2.0f};
+        Long[] la2 = new Long[]{3l};
+        Double[] da2 = new Double[]{4.0d};
 
-        String[] sa = new String[] {"hello"};
-        Z[] za = new Z[] {new Z()};
+        String[] sa = new String[]{"hello"};
+        Z[] za = new Z[]{new Z()};
 
         List<Boolean> bl = Arrays.asList(true);
         List<Byte> yl = Arrays.asList((byte) 0);
@@ -71,14 +71,30 @@ public class MustacheTests implements SidekickDataRedactionAPI {
         List<String> sl = Arrays.asList("hello");
         List<Z> zl = Arrays.asList(new Z());
 
-        Map<String, Boolean> bm = new HashMap<String, Boolean>() {{ put("key", true); }};
-        Map<String, Byte> ym = new HashMap<String, Byte>() {{ put("key", (byte) 0); }};
-        Map<String, Integer> im = new HashMap<String, Integer>() {{ put("key", 1); }};
-        Map<String, Float> fm = new HashMap<String, Float>() {{ put("key", 2.0f); }};
-        Map<String, Long> lm = new HashMap<String, Long>() {{ put("key", 3l); }};
-        Map<String, Double> dm = new HashMap<String, Double>() {{ put("key", 4.0d); }};
-        Map<String, String> sm = new HashMap<String, String>() {{ put("key", "hello"); }};
-        Map<String, Z> zm = new HashMap<String, Z>() {{ put("key", new Z()); }};
+        Map<String, Boolean> bm = new HashMap<String, Boolean>() {{
+            put("key", true);
+        }};
+        Map<String, Byte> ym = new HashMap<String, Byte>() {{
+            put("key", (byte) 0);
+        }};
+        Map<String, Integer> im = new HashMap<String, Integer>() {{
+            put("key", 1);
+        }};
+        Map<String, Float> fm = new HashMap<String, Float>() {{
+            put("key", 2.0f);
+        }};
+        Map<String, Long> lm = new HashMap<String, Long>() {{
+            put("key", 3l);
+        }};
+        Map<String, Double> dm = new HashMap<String, Double>() {{
+            put("key", 4.0d);
+        }};
+        Map<String, String> sm = new HashMap<String, String>() {{
+            put("key", "hello");
+        }};
+        Map<String, Z> zm = new HashMap<String, Z>() {{
+            put("key", new Z());
+        }};
 
     }
 
@@ -87,7 +103,7 @@ public class MustacheTests implements SidekickDataRedactionAPI {
         int iVal1 = 1;
         Integer iVal2 = 2;
         String strVal = "val";
-        ByteBuffer bbVal = ByteBuffer.wrap(new byte[] { 0, 1, 2 });
+        ByteBuffer bbVal = ByteBuffer.wrap(new byte[]{0, 1, 2});
 
     }
 
@@ -98,6 +114,7 @@ public class MustacheTests implements SidekickDataRedactionAPI {
         C,
 
     }
+
     public static void main(String[] args) throws Exception {
         Map<String, Object> variables = new HashMap<>();
         variables.put("x", new X());
@@ -138,7 +155,7 @@ public class MustacheTests implements SidekickDataRedactionAPI {
                 "Test {{x.y.la2.0}}",
                 "Test {{x.y.da2.0}}",
 
-/*                "Test {{x.y.bl.0}}",
+                "Test {{x.y.bl.0}}",
                 "Test {{x.y.yl.0}}",
                 "Test {{x.y.il.0}}",
                 "Test {{x.y.fl.0}}",
@@ -154,7 +171,7 @@ public class MustacheTests implements SidekickDataRedactionAPI {
                 "Test {{x.y.lm.key}}",
                 "Test {{x.y.dm.key}}",
                 "Test {{x.y.sm.key}}",
-                "Test {{x.y.zm.key.iVal1}}",*/
+                "Test {{x.y.zm.key.iVal1}}",
         };
 
         MustacheExpressionExecutor mustache = new MustacheExpressionExecutor();
