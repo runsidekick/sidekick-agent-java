@@ -1090,30 +1090,9 @@ public final class SerializationHelper {
         }
     }
 
-    private static String serializeData(Object obj, DataRedactionContext dataRedactionContext) throws IOException {
-        SerializationContext serializationContext = SerializationContext.start();
-        serializationContext.dataRedactionContext = dataRedactionContext;
-        ObjectMapper objectMapper = threadLocalObjectMapper.get();
-        JsonFactory jsonFactory = objectMapper.getFactory();
-        JsonWriter jw = new JsonWriter(jsonFactory._getBufferRecycler());
-        threadLocalJsonWriter.set(jw);
-        try {
-            objectMapper.writeValue(jw, obj);
-            return jw.getAndClear();
-        } finally {
-            threadLocalJsonWriter.remove();
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static String serializeValue(Object value, DataRedactionContext dataRedactionContext) throws IOException {
-        SerializationContext.destroy();
-        try {
-            return serializeData(value, dataRedactionContext);
-        } finally {
-            SerializationContext.destroy();
-        }
+    private static void writeEmptyArray(JsonGenerator gen) throws IOException {
+        gen.writeStartArray();
+        gen.writeEndArray();
     }
 
     private static void wrapAsErroneous(JsonGenerator gen, String fieldName, String errorMessage) throws IOException {
@@ -1131,14 +1110,6 @@ public final class SerializationHelper {
         gen.writeEndObject();
     }
 
-    public static String wrapAsErroneous(String errorMessage) {
-        JSONObject wrappedValue = new JSONObject();
-        wrappedValue.put(TYPE_PROPERTY, String.class.getName());
-        wrappedValue.put(VALUE_PROPERTY, "[ERROR] " + errorMessage);
-        wrappedValue.put(ERRONEOUS_PROPERTY, true);
-        return wrappedValue.toString();
-    }
-
     private static void wrapAsIgnored(JsonGenerator gen, String fieldName, String ignoreReason) throws IOException {
         gen.writeFieldName(fieldName);
         gen.writeStartObject();
@@ -1151,6 +1122,61 @@ public final class SerializationHelper {
         gen.writeEndObject();
     }
 
+    private static void wrapAsRedacted(JsonGenerator gen) throws IOException {
+        gen.writeFieldName(DATA_REDACTED_PROPERTY);
+        gen.writeBoolean(true);
+    }
+
+    private static boolean shouldRedactVariable(JsonGenerator gen) {
+        String fieldName = gen.getOutputContext().getCurrentName();
+        if (fieldName == null || TYPE_PROPERTY.equals(fieldName) || VALUE_PROPERTY.equals(fieldName)) {
+            fieldName = gen.getOutputContext().getParent().getCurrentName();
+        }
+        SerializationContext serializationContext = SerializationContext.get();
+        if (serializationContext != null) {
+            return DataRedactionHelper.shouldRedactVariable(serializationContext.getDataRedactionContext(), fieldName);
+        }
+        return DataRedactionHelper.shouldRedactVariable(null, fieldName);
+    }
+
+    private static String serializeData(Object obj, DataRedactionContext dataRedactionContext) throws IOException {
+        SerializationContext serializationContext = SerializationContext.start();
+        serializationContext.dataRedactionContext = dataRedactionContext;
+        try {
+            ObjectMapper objectMapper = threadLocalObjectMapper.get();
+            JsonFactory jsonFactory = objectMapper.getFactory();
+            JsonWriter jw = new JsonWriter(jsonFactory._getBufferRecycler());
+            threadLocalJsonWriter.set(jw);
+            try {
+                objectMapper.writeValue(jw, obj);
+                return jw.getAndClear();
+            } finally {
+                threadLocalJsonWriter.remove();
+            }
+        } finally {
+            serializationContext.close();
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static String serializeValue(Object value, DataRedactionContext dataRedactionContext) throws IOException {
+        SerializationContext.destroy();
+        try {
+            return serializeData(value, dataRedactionContext);
+        } finally {
+            SerializationContext.destroy();
+        }
+    }
+
+    public static String wrapAsErroneous(String errorMessage) {
+        JSONObject wrappedValue = new JSONObject();
+        wrappedValue.put(TYPE_PROPERTY, String.class.getName());
+        wrappedValue.put(VALUE_PROPERTY, "[ERROR] " + errorMessage);
+        wrappedValue.put(ERRONEOUS_PROPERTY, true);
+        return wrappedValue.toString();
+    }
+
     public static String wrapAsIgnored(String ignoreReason) throws IOException {
         JSONObject wrappedValue = new JSONObject();
         wrappedValue.put(TYPE_PROPERTY, String.class.getName());
@@ -1159,13 +1185,11 @@ public final class SerializationHelper {
         return wrappedValue.toString();
     }
 
-    public static String serializeValueFormatted(Object value) throws IOException {
-        SerializationContext.destroy();
-        try {
-            return threadLocalObjectMapper.get().writerWithDefaultPrettyPrinter().writeValueAsString(value);
-        } finally {
-            SerializationContext.destroy();
-        }
+    public static String wrapAsRedacted() {
+        JSONObject wrappedValue = new JSONObject();
+        wrappedValue.put(VALUE_PROPERTY, "null");
+        wrappedValue.put(DATA_REDACTED_PROPERTY, true);
+        return wrappedValue.toString();
     }
 
     public static boolean shouldSkipValueFromSerialization(Object value) {
@@ -1185,38 +1209,13 @@ public final class SerializationHelper {
         return message;
     }
 
-    public static boolean shouldRedactVariable(JsonGenerator gen) {
-        String fieldName;
-        if (gen.getOutputContext().getCurrentName() == null
-                || gen.getOutputContext().getCurrentName().equals(TYPE_PROPERTY)) {
-            fieldName = gen.getOutputContext().getParent().getCurrentName();
-        } else if (gen.getOutputContext().getCurrentName().equals(VALUE_PROPERTY)) {
-            fieldName = gen.getOutputContext().getParent().getCurrentName();
-        } else {
-            fieldName = gen.getOutputContext().getCurrentName();
+    public static String serializeValueFormatted(Object value) throws IOException {
+        SerializationContext.destroy();
+        try {
+            return threadLocalObjectMapper.get().writerWithDefaultPrettyPrinter().writeValueAsString(value);
+        } finally {
+            SerializationContext.destroy();
         }
-        SerializationContext serializationContext = SerializationContext.get();
-        if (serializationContext != null) {
-            return DataRedactionHelper.shouldRedactVariable(serializationContext.getDataRedactionContext(), fieldName);
-        }
-        return DataRedactionHelper.shouldRedactVariable(null, fieldName);
-    }
-
-    public static void wrapAsRedacted(JsonGenerator gen) throws IOException {
-        gen.writeFieldName(DATA_REDACTED_PROPERTY);
-        gen.writeBoolean(true);
-    }
-
-    public static String wrapAsRedacted() {
-        JSONObject wrappedValue = new JSONObject();
-        wrappedValue.put(VALUE_PROPERTY, "null");
-        wrappedValue.put(DATA_REDACTED_PROPERTY, true);
-        return wrappedValue.toString();
-    }
-
-    public static void writeEmptyArray(JsonGenerator gen) throws IOException {
-        gen.writeStartArray();
-        gen.writeEndArray();
     }
 
 }
