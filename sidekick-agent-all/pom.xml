@@ -27,12 +27,17 @@
         </dependency>
         <dependency>
             <groupId>com.runsidekick.agent</groupId>
+            <artifactId>sidekick-agent-api-logpoint</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.runsidekick.agent</groupId>
             <artifactId>sidekick-agent-api-tracepoint</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>
             <groupId>com.runsidekick.agent</groupId>
-            <artifactId>sidekick-agent-api-logpoint</artifactId>
+            <artifactId>sidekick-agent-data-redaction</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>

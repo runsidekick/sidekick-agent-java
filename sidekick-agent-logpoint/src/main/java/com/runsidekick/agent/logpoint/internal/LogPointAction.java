@@ -1,21 +1,24 @@
 package com.runsidekick.agent.logpoint.internal;
 
+import com.runsidekick.agent.api.dataredaction.DataRedactionContext;
 import com.runsidekick.agent.broker.error.CodedException;
 import com.runsidekick.agent.broker.error.CommonErrorCodes;
 import com.runsidekick.agent.core.logger.LoggerFactory;
+import com.runsidekick.agent.dataredaction.DataRedactionHelper;
 import com.runsidekick.agent.logpoint.LogPointSupport;
-import com.runsidekick.agent.logpoint.domain.Variable;
 import com.runsidekick.agent.logpoint.event.LogPointEvent;
 import com.runsidekick.agent.logpoint.event.LogPointFailedEvent;
 import com.runsidekick.agent.logpoint.expression.execute.LogPointExpressionExecutor;
 import com.runsidekick.agent.probe.domain.Probe;
 import com.runsidekick.agent.probe.domain.ProbeAction;
+import com.runsidekick.agent.probe.domain.Variable;
 import org.slf4j.Logger;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,11 +50,15 @@ class LogPointAction implements ProbeAction<LogPointContext> {
         return context.disabled;
     }
 
-    private void handleOnLogPointEvent(String logPointId, String fileName, String className, int line, String client,
+    private void handleOnLogPointEvent(String logPointId, Class<?> clazz,
+                                       String fileName, String className, int line, String client,
                                        String logExpression, boolean stdoutEnabled, String logLevel,
                                        String methodName, Object callee, String[] localVarNames,
                                        Object[] localVarValues) {
         List<Variable> variableList = new ArrayList<>(localVarNames.length + 1);
+
+        DataRedactionContext dataRedactionContext = new DataRedactionContext(
+                clazz, fileName, className, line, methodName);
 
         if (callee != null) {
             variableList.add(new Variable("this", callee));
@@ -64,7 +71,9 @@ class LogPointAction implements ProbeAction<LogPointContext> {
             variables.put(localVarName, localVarValue);
         }
 
-        String logMessage = expressionExecutor.execute(logExpression, variables);
+        String logMessage = expressionExecutor.execute(dataRedactionContext, logExpression, variables);
+
+        logMessage = DataRedactionHelper.redactLogMessage(dataRedactionContext, logExpression, logMessage);
 
         LogPointEvent logPointEvent =
                 new LogPointEvent(logPointId,
@@ -111,7 +120,7 @@ class LogPointAction implements ProbeAction<LogPointContext> {
             }
 
             handleOnLogPointEvent(
-                    context.id,
+                    context.id, clazz,
                     probe.getFileName(), probe.getClassName(), probe.getLineNo(), probe.getClient(),
                     context.logExpression, context.stdoutEnabled, context.logLevel,
                     methodName,

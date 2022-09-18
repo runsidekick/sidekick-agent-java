@@ -65,18 +65,20 @@
         <module>sidekick-agent-core</module>
 
         <module>sidekick-agent-api-broker</module>
+        <module>sidekick-agent-api-data-redaction</module>
+        <module>sidekick-agent-api-logpoint</module>
         <module>sidekick-agent-api-tracepoint</module>
         <module>sidekick-agent-api-tracepoint-integrations-junit4</module>
         <module>sidekick-agent-api-tracepoint-integrations-junit5</module>
-        <module>sidekick-agent-api-logpoint</module>
 
         <module>sidekick-agent-jdk-attach</module>
         <module>sidekick-agent-instrument</module>
 
         <module>sidekick-agent-broker</module>
+        <module>sidekick-agent-data-redaction</module>
+        <module>sidekick-agent-logpoint</module>
         <module>sidekick-agent-probe</module>
         <module>sidekick-agent-tracepoint</module>
-        <module>sidekick-agent-logpoint</module>
 
         <module>sidekick-agent-all</module>
         <module>sidekick-agent-bootstrap</module>
@@ -100,7 +102,22 @@
             </dependency>
             <dependency>
                 <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-api-data-redaction</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
                 <artifactId>sidekick-agent-api-tracepoint</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-api-logpoint</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-data-redaction</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
             <dependency>

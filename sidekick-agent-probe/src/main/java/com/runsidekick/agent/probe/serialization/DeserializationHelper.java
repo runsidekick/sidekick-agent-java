@@ -1,4 +1,4 @@
-package com.runsidekick.agent.tracepoint.serialization;
+package com.runsidekick.agent.probe.serialization;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
