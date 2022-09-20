@@ -134,6 +134,8 @@ Source bundling: https://docs.runsidekick.com/installation/installing-agents/jav
 ##### Build command:
 ```mvn clean package```
 
+### Benchmarks
+- [Production Debuggers — 2022 Benchmark Results](https://medium.com/runsidekick/sidekick-blog-production-debuggers-2022-benchmark-results-part-1-ec173d0f8ccd?utm_source=sidekick-java-readme)
 
 ##  Official Sidekick Agents
 
