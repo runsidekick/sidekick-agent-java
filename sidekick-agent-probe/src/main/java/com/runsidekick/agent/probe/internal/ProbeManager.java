@@ -60,6 +60,7 @@ public final class ProbeManager {
     private static final Map<ClassLoader, Set<String>> classLoaderMap = newConcurrentWeakMap();
     private static final Set<ClassLoader> classLoaders = newConcurrentWeakSet();
     private static final ThreadLocal<TransformContext> threadLocalTransformContext = new ThreadLocal<>();
+    private static final int maxTryValidateClass = 5;
     private static boolean initialized;
 
     static {
@@ -235,6 +236,24 @@ public final class ProbeManager {
             }
         }
 
+        return null;
+    }
+
+    private static String getValidClassName(String className) {
+        return getValidClassName(className, 1);
+    }
+
+    private static String getValidClassName(String className, int tryCount) {
+        String classResourceName = className.replace('.', '/').concat(".class");
+        for (ClassLoader classLoader : classLoaderMap.keySet()) {
+            if (classLoader.getResource(classResourceName) != null) {
+                return className;
+            }
+        }
+        if (tryCount++ < maxTryValidateClass) {
+            className = className.substring(className.indexOf(".") + 1);
+            return getValidClassName(className, tryCount);
+        }
         return null;
     }
 
@@ -481,6 +500,14 @@ public final class ProbeManager {
     }
 
     public static ProbeMetadata getProbeMetadata(String className, int lineNo, String client) throws Exception {
+        String validClassName = getValidClassName(className);
+        if (validClassName == null) {
+            LOGGER.error("Unable to find class {}", className);
+            throw new CodedException(ProbeErrorCodes.UNABLE_TO_FIND_CLASS, className);
+        }
+
+        className = validClassName;
+
         ClassLoader classLoader = getClassLoader(className);
         if (classLoader == null) {
             LOGGER.error("Unable to find class {}", className);

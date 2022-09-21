@@ -1,5 +1,11 @@
 package com.runsidekick.agent.probe.util;
 
+import com.runsidekick.agent.core.logger.LoggerFactory;
+import org.slf4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Utility class for class related stuff.
  *
@@ -17,12 +23,20 @@ public class ClassUtils {
             SRC_MAIN_SCALA_DIRECTORY_NAME,
             SRC_DIRECTORY_NAME
     };
+    private static final Map<String, String> REPO_API_URL_MAPPING = new HashMap<String, String>() {{
+        put("github.com", "api.github.com/repos");
+        put("gitlab.com", "api.gitlab.com/repos");
+    }};
+    private static final String CONTENTS = "/contents/";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtils.class);
 
     private ClassUtils() {
     }
 
     public static String extractClassName(String fileName) {
         fileName = normalizeFileName(fileName);
+        fileName = removeGitParts(fileName);
         for (String srcDirectory : SRC_DIRECTORIES) {
             int idx = fileName.indexOf(srcDirectory);
             if (idx >= 0) {
@@ -55,6 +69,16 @@ public class ClassUtils {
         } else {
             return fileName;
         }
+    }
+
+    public static String removeGitParts(String fileName) {
+        for (Map.Entry<String, String> entry: REPO_API_URL_MAPPING.entrySet()) {
+            if (fileName.contains(entry.getValue())) {
+                fileName = fileName.substring(fileName.indexOf(CONTENTS) + CONTENTS.length());
+                break;
+            }
+        }
+        return fileName;
     }
 
 }
