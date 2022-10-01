@@ -521,7 +521,8 @@ public final class ProbeManager {
         return getProbeMetadata(probe.getClassName(), probe.getLineNo(), probe.getClient());
     }
 
-    public static synchronized InternalProbe getOrPutProbe(String fileName, String className, int lineNo, String client) {
+    public static synchronized InternalProbe getOrPutProbe(
+            String fileName, String className, int lineNo, String client, Set<String> tags) {
         className = normalizeClassName(className);
 
         LOGGER.debug("Putting probe with id {} to class {} on line {} from client {}", className, lineNo, client);
@@ -559,7 +560,7 @@ public final class ProbeManager {
                 probe = new InternalProbe(
                         methodProbes, ownerClassName, classType,
                         generateProbeId(className, lineNo, client),
-                        fileName, className, lineNo, client, metadata, methodId);
+                        fileName, className, lineNo, client, metadata, methodId, tags);
                 InternalProbe existingProbe = methodProbes.probes.putIfAbsent(probe.getId(), probe);
                 added = existingProbe == null;
                 if (!added) {

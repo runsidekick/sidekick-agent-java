@@ -2,6 +2,8 @@ package com.runsidekick.agent.logpoint.request;
 
 import com.runsidekick.agent.broker.request.impl.BaseRequest;
 
+import java.util.Set;
+
 /**
  * @author yasin
  */
@@ -19,6 +21,7 @@ public class PutLogPointRequest extends BaseRequest {
     private boolean stdoutEnabled;
     private String logLevel;
     private boolean disable;
+    private Set<String> tags;
 
     public String getLogPointId() {
         return logPointId;
@@ -116,6 +119,14 @@ public class PutLogPointRequest extends BaseRequest {
         this.disable = disable;
     }
 
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "PutLogPointRequest{" +
@@ -133,6 +144,7 @@ public class PutLogPointRequest extends BaseRequest {
                 ", stdoutEnabled=" + stdoutEnabled +
                 ", logLevel='" + logLevel + '\'' +
                 ", disable='" + disable + '\'' +
+                ", tags='" + tags +'\'' +
                 '}';
     }
 }

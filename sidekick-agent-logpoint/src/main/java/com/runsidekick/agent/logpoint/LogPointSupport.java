@@ -11,6 +11,7 @@ import com.runsidekick.agent.logpoint.internal.LogPointManager;
 import org.slf4j.Logger;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -63,15 +64,15 @@ public final class LogPointSupport {
 
     public static void putLogPoint(String id, String className, int lineNo, String client, String logExpression,
                                    String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                                   boolean stdoutEnabled, String logLevel, boolean disable) {
+                                   boolean stdoutEnabled, String logLevel, boolean disable, Set<String> tags) {
         putLogPoint(id, null, className, lineNo, client, logExpression, fileHash,
-                conditionExpression, expireSecs, expireCount, stdoutEnabled, logLevel, disable);
+                conditionExpression, expireSecs, expireCount, stdoutEnabled, logLevel, disable, tags);
     }
 
     public static void putLogPoint(String id, String fileName, String className, int lineNo, String client,
                                    String logExpression, String fileHash, String conditionExpression,
                                    int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel,
-                                   boolean disable) {
+                                   boolean disable, Set<String> tags) {
         if (client == null) {
             client = BrokerManager.BROKER_CLIENT;
         }
@@ -87,12 +88,12 @@ public final class LogPointSupport {
         }
         LogPointManager.putLogPoint(
                 id, fileName, className, lineNo, client, logExpression, fileHash, conditionExpression,
-                expireSecs, expireCount, stdoutEnabled, logLevel, disable);
+                expireSecs, expireCount, stdoutEnabled, logLevel, disable, tags);
     }
 
     public static void updateLogPoint(String id, String client, String logExpression,
                                       String conditionExpression, int expireSecs, int expireCount, boolean disable,
-                                      boolean stdoutEnabled, String logLevel) {
+                                      boolean stdoutEnabled, String logLevel, Set<String> tags) {
         if (client == null) {
             client = BrokerManager.BROKER_CLIENT;
         }
@@ -108,7 +109,7 @@ public final class LogPointSupport {
         }
         LogPointManager.updateLogPoint(
                 id, client, logExpression, conditionExpression,
-                expireSecs, expireCount, disable, stdoutEnabled, logLevel);
+                expireSecs, expireCount, disable, stdoutEnabled, logLevel, tags);
     }
 
     public static void removeLogPoint(String id, String client) {

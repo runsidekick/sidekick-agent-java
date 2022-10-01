@@ -14,6 +14,7 @@ import javassist.CtMethod;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * @author serkan
@@ -56,11 +57,11 @@ public final class ProbeSupport {
         return ProbeManager.getProbe(className, lineNo, client);
     }
 
-    public static Probe getOrPutProbe(String fileName, String className, int lineNo, String client) {
+    public static Probe getOrPutProbe(String fileName, String className, int lineNo, String client, Set<String> tags) {
         if (client == null) {
             client = BrokerManager.BROKER_CLIENT;
         }
-        return ProbeManager.getOrPutProbe(fileName, className, lineNo, client);
+        return ProbeManager.getOrPutProbe(fileName, className, lineNo, client, tags);
     }
 
     public static void removeProbe(String id, boolean ifEmpty) {

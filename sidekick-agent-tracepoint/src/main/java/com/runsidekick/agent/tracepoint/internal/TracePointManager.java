@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -124,7 +125,9 @@ public final class TracePointManager {
                                             context.expireSecs,
                                             context.expireCount,
                                             context.enableTracing,
-                                            context.disabled);
+                                            context.disabled,
+                                            probe.getTags()
+                                            );
                             tracePoints.add(tracePoint);
                         }
                     });
@@ -134,7 +137,7 @@ public final class TracePointManager {
 
     public static void putTracePoint(String id, String fileName, String className, int lineNo, String client,
                                      String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing, boolean disable) {
+                                     boolean enableTracing, boolean disable, Set<String> tags) {
         LOGGER.debug(
                 "Putting tracepoint with id {} to class {} on line {} from client {}",
                 id, className, lineNo, client);
@@ -164,7 +167,7 @@ public final class TracePointManager {
                         metadata.classType(), metadata.method(), lineNo);
             }
 
-            probe = ProbeSupport.getOrPutProbe(fileName, className, lineNo, client);
+            probe = ProbeSupport.getOrPutProbe(fileName, className, lineNo, client, tags);
 
             TracePointContext context =
                     new TracePointContext(
@@ -206,7 +209,7 @@ public final class TracePointManager {
 
     public static synchronized void updateTracePoint(String id, String client,
                                                      String conditionExpression, int expireSecs, int expireCount,
-                                                     boolean enableTracing, boolean disable) {
+                                                     boolean enableTracing, boolean disable, Set<String> tags) {
         LOGGER.debug(
                 "Updating tracepoint with id {} from client {}",
                 id, client);

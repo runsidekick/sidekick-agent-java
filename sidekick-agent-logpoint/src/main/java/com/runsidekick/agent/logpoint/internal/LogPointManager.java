@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -129,7 +130,8 @@ public final class LogPointManager {
                                             context.expireCount,
                                             context.disabled,
                                             context.stdoutEnabled,
-                                            context.logLevel);
+                                            context.logLevel,
+                                            probe.getTags());
                             logPoints.add(logPoint);
                         }
                     });
@@ -140,7 +142,7 @@ public final class LogPointManager {
     public static void putLogPoint(String id, String fileName, String className, int lineNo, String client,
                                    String logExpression, String fileHash, String conditionExpression,
                                    int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel,
-                                   boolean disable) {
+                                   boolean disable, Set<String> tags) {
         LOGGER.debug(
                 "Putting logpoint with id {} to class {} on line {} from client {}",
                 id, className, lineNo, client);
@@ -170,7 +172,7 @@ public final class LogPointManager {
                         metadata.classType(), metadata.method(), lineNo);
             }
 
-            probe = ProbeSupport.getOrPutProbe(fileName, className, lineNo, client);
+            probe = ProbeSupport.getOrPutProbe(fileName, className, lineNo, client, tags);
 
             LogPointContext context =
                     new LogPointContext(probe, id, logExpression, conditionExpression,
@@ -210,7 +212,8 @@ public final class LogPointManager {
 
     public static synchronized void updateLogPoint(String id, String client, String logExpression,
                                                    String conditionExpression, int expireSecs, int expireCount,
-                                                   boolean disable, boolean stdoutEnabled, String logLevel) {
+                                                   boolean disable, boolean stdoutEnabled, String logLevel,
+                                                   Set<String> tags) {
         LOGGER.debug(
                 "Updating logpoint with id {} from client {}",
                 id, client);

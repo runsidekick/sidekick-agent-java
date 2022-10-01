@@ -2,6 +2,8 @@ package com.runsidekick.agent.logpoint.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Set;
+
 /**
  * @author yasin
  */
@@ -20,6 +22,7 @@ public class LogPoint {
     private int expireSecs;
     private int expireCount;
     protected String fileHash;
+    private Set<String> tags;
 
     public String getFileHash() {
         return fileHash;
@@ -36,7 +39,7 @@ public class LogPoint {
 
     public LogPoint(String id, String fileName, String className, int lineNo, String client, String logExpression,
                     String conditionExpression, int expireSecs, int expireCount,
-                    boolean disabled, boolean stdoutEnabled, String logLevel) {
+                    boolean disabled, boolean stdoutEnabled, String logLevel, Set<String> tags) {
         this.id = id;
         this.fileName = fileName;
         this.className = className;
@@ -49,6 +52,7 @@ public class LogPoint {
         this.disabled = disabled;
         this.stdoutEnabled = stdoutEnabled;
         this.logLevel = logLevel;
+        this.tags = tags;
     }
 
     public String getId() {
@@ -147,6 +151,14 @@ public class LogPoint {
         this.logLevel = logLevel;
     }
 
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "LogPoint{" +
@@ -163,6 +175,7 @@ public class LogPoint {
                 ", stdoutEnabled=" + stdoutEnabled +
                 ", logLevel='" + logLevel + '\'' +
                 ", disabled=" + disabled +
+                ", tags='" + tags + '\'' +
                 '}';
     }
 }

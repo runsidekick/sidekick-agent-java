@@ -7,6 +7,7 @@ import com.runsidekick.agent.probe.domain.ProbeAction;
 import com.runsidekick.agent.probe.domain.ProbeMetadata;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author serkan
@@ -20,8 +21,8 @@ class InternalProbe extends BaseProbe implements MutableProbe {
 
     InternalProbe(MethodProbes ownerMethodProbes, String ownerClassName, ClassType classType,
                   String id, String fileName, String className, int lineNo, String client, ProbeMetadata metadata,
-                  String methodId) {
-        super(id, fileName, className, lineNo, client, metadata.method().getName());
+                  String methodId, Set<String> tags) {
+        super(id, fileName, className, lineNo, client, metadata.method().getName(), tags);
         this.ownerMethodProbes = ownerMethodProbes;
         this.ownerClassName = ownerClassName;
         this.classType = classType;
