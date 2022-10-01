@@ -21,8 +21,8 @@ class InternalProbe extends BaseProbe implements MutableProbe {
 
     InternalProbe(MethodProbes ownerMethodProbes, String ownerClassName, ClassType classType,
                   String id, String fileName, String className, int lineNo, String client, ProbeMetadata metadata,
-                  String methodId, Set<String> tags) {
-        super(id, fileName, className, lineNo, client, metadata.method().getName(), tags);
+                  String methodId) {
+        super(id, fileName, className, lineNo, client, metadata.method().getName());
         this.ownerMethodProbes = ownerMethodProbes;
         this.ownerClassName = ownerClassName;
         this.classType = classType;

@@ -6,7 +6,6 @@ import com.runsidekick.agent.probe.domain.ProbeAction;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -20,19 +19,17 @@ public abstract class BaseProbe implements Probe {
     protected final int lineNo;
     protected final String client;
     protected final String methodName;
-    protected final Set<String> tags;
     protected final Map<String, ProbeAction> actions = new ConcurrentHashMap<>();
     protected volatile boolean removed;
 
     protected BaseProbe(String id, String fileName, String className, int lineNo, String client,
-                        String methodName, Set<String> tags) {
+                        String methodName) {
         this.id = id;
         this.fileName = fileName;
         this.className = className;
         this.lineNo = lineNo;
         this.client = client;
         this.methodName = methodName;
-        this.tags = tags;
     }
 
     @Override
@@ -63,11 +60,6 @@ public abstract class BaseProbe implements Probe {
     @Override
     public String getMethodName() {
         return methodName;
-    }
-
-    @Override
-    public Set<String> getTags() {
-        return tags;
     }
 
     @Override

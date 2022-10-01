@@ -57,11 +57,11 @@ public final class ProbeSupport {
         return ProbeManager.getProbe(className, lineNo, client);
     }
 
-    public static Probe getOrPutProbe(String fileName, String className, int lineNo, String client, Set<String> tags) {
+    public static Probe getOrPutProbe(String fileName, String className, int lineNo, String client) {
         if (client == null) {
             client = BrokerManager.BROKER_CLIENT;
         }
-        return ProbeManager.getOrPutProbe(fileName, className, lineNo, client, tags);
+        return ProbeManager.getOrPutProbe(fileName, className, lineNo, client);
     }
 
     public static void removeProbe(String id, boolean ifEmpty) {
