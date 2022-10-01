@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.runsidekick.agent</groupId>
         <artifactId>sidekick-agent-parent</artifactId>
-        <version>0.0.10-SNAPSHOT</version>
+        <version>0.0.12-SNAPSHOT</version>
     </parent>
 
     <groupId>com.runsidekick.agent</groupId>
@@ -27,12 +27,17 @@
         </dependency>
         <dependency>
             <groupId>com.runsidekick.agent</groupId>
+            <artifactId>sidekick-agent-api-logpoint</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.runsidekick.agent</groupId>
             <artifactId>sidekick-agent-api-tracepoint</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>
             <groupId>com.runsidekick.agent</groupId>
-            <artifactId>sidekick-agent-api-logpoint</artifactId>
+            <artifactId>sidekick-agent-data-redaction</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>

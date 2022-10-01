@@ -4,6 +4,7 @@ import com.runsidekick.agent.probe.domain.Probe;
 import com.runsidekick.agent.probe.condition.Condition;
 import com.runsidekick.agent.probe.domain.ProbeContext;
 
+import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -20,14 +21,16 @@ class LogPointContext implements ProbeContext {
     final int expireSecs;
     final int expireCount;
     final Condition condition;
+    final boolean predefined;
+    final Set<String> tags;
     volatile ScheduledFuture expireFuture;
     volatile boolean disabled;
     volatile boolean removed;
-    volatile boolean predefined;
 
     LogPointContext(Probe probe, String id,
                     String logExpression, String conditionExpression, int expireSecs, int expireCount,
-                    Condition condition, boolean disabled, boolean stdoutEnabled, String logLevel, boolean predefined) {
+                    Condition condition, boolean disabled, boolean stdoutEnabled, String logLevel,
+                    boolean predefined, Set<String> tags) {
         this.probe = probe;
         this.id = id;
         this.logExpression = logExpression;
@@ -39,6 +42,7 @@ class LogPointContext implements ProbeContext {
         this.stdoutEnabled = stdoutEnabled;
         this.logLevel = logLevel;
         this.predefined = predefined;
+        this.tags = tags;
     }
 
     @Override

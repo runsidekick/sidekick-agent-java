@@ -30,7 +30,8 @@ public class UpdateLogPointRequestHandler
                     request.isDisable(),
                     request.isStdoutEnabled(),
                     request.getLogLevel(),
-                    request.isPredefined());
+                    request.isPredefined(),
+                    request.getTags());
             BrokerManager.publishApplicationStatus();
             if (request.getClient() != null) {
                 BrokerManager.publishApplicationStatus(request.getClient());

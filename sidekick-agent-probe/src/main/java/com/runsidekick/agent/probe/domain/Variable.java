@@ -1,10 +1,12 @@
-package com.runsidekick.agent.tracepoint.domain;
+package com.runsidekick.agent.probe.domain;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.runsidekick.agent.tracepoint.serialization.SerializationHelper;
+import com.runsidekick.agent.api.dataredaction.DataRedactionContext;
+import com.runsidekick.agent.dataredaction.DataRedactionHelper;
+import com.runsidekick.agent.probe.serialization.SerializationHelper;
 
 import java.io.IOException;
 
@@ -60,6 +62,10 @@ public class Variable {
         }
 
         public static String serializeVariable(Variable variable) {
+            return serializeVariable(variable, null);
+        }
+
+        public static String serializeVariable(Variable variable, DataRedactionContext dataRedactionContext) {
             String serializedValue;
             try {
                 boolean skipValueFromSerialization =
@@ -68,7 +74,11 @@ public class Variable {
                     serializedValue = SerializationHelper.wrapAsIgnored(
                             SerializationHelper.SKIPPED_VALUE_SERIALIZATION_MESSAGE);
                 } else {
-                    serializedValue = SerializationHelper.serializeValue(variable.value);
+                    if (DataRedactionHelper.shouldRedactVariable(dataRedactionContext, variable.name)) {
+                        serializedValue = SerializationHelper.wrapAsRedacted();
+                    } else {
+                        serializedValue = SerializationHelper.serializeValue(variable.value, dataRedactionContext);
+                    }
                 }
             } catch (Throwable t) {
                 String serializationErrorMessage = SerializationHelper.generateSerializationErrorMessage(t);

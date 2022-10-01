@@ -2,6 +2,8 @@ package com.runsidekick.agent.api.logpoint;
 
 import com.runsidekick.agent.api.broker.publisher.EventPublisher;
 
+import java.util.Set;
+
 /**
  * @author yasin
  */
@@ -13,11 +15,11 @@ public interface LogPointAPIService {
 
     String putLogPoint(String className, int lineNo, String client, String logExpression,
                        String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                       boolean stdoutEnabled, String logLevel, boolean disable, boolean predefined);
+                       boolean stdoutEnabled, String logLevel, boolean disable, boolean predefined, Set<String> tags);
 
     void updateLogPoint(String id, String client, String logExpression,
                         String conditionExpression, int expireSecs, int expireCount, boolean disable,
-                        boolean stdoutEnabled, String logLevel, boolean predefined);
+                        boolean stdoutEnabled, String logLevel, boolean predefined, Set<String> tags);
 
     void removeLogPoint(String id, String client);
 

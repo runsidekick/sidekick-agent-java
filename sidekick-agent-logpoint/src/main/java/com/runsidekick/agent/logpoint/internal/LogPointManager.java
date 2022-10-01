@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -35,6 +36,7 @@ public final class LogPointManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogPointManager.class);
 
     private static final Map<String, Probe> logPointProbeMap = new ConcurrentHashMap<>();
+    private static final Map<String, List<String>> tagLogPointListMap = new ConcurrentHashMap<>();
     private static final ScheduledExecutorService logPointExpireScheduler =
             ExecutorUtils.newScheduledExecutorService("logpoint-expire-scheduler");
     private static final LogPointExpressionExecutor expressionExecutor = new MustacheExpressionExecutor();
@@ -130,7 +132,8 @@ public final class LogPointManager {
                                             context.disabled,
                                             context.stdoutEnabled,
                                             context.logLevel,
-                                            context.predefined);
+                                            context.predefined,
+                                            context.tags);
                             logPoints.add(logPoint);
                         }
                     });
@@ -141,7 +144,7 @@ public final class LogPointManager {
     public static void putLogPoint(String id, String fileName, String className, int lineNo, String client,
                                    String logExpression, String fileHash, String conditionExpression,
                                    int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel,
-                                   boolean disable, boolean predefined) {
+                                   boolean disable, boolean predefined, Set<String> tags) {
         LOGGER.debug(
                 "Putting logpoint with id {} to class {} on line {} from client {}",
                 id, className, lineNo, client);
@@ -175,7 +178,7 @@ public final class LogPointManager {
 
             LogPointContext context =
                     new LogPointContext(probe, id, logExpression, conditionExpression,
-                            expireSecs, expireCount, condition, disable, stdoutEnabled, logLevel, predefined);
+                            expireSecs, expireCount, condition, disable, stdoutEnabled, logLevel, predefined, tags);
             ProbeAction<LogPointContext> action = createLogPointAction(context);
 
             boolean added = ProbeSupport.addProbeAction(probe, action) == null;
@@ -187,6 +190,7 @@ public final class LogPointManager {
             }
 
             logPointProbeMap.put(id, probe);
+            mapLogPointWithTags(id, context.tags);
 
             if (expireSecs > 0 && !predefined) {
                 context.expireFuture =
@@ -212,7 +216,7 @@ public final class LogPointManager {
     public static synchronized void updateLogPoint(String id, String client, String logExpression,
                                                    String conditionExpression, int expireSecs, int expireCount,
                                                    boolean disable, boolean stdoutEnabled, String logLevel,
-                                                   boolean predefined) {
+                                                   boolean predefined, Set<String> tags) {
         LOGGER.debug(
                 "Updating logpoint with id {} from client {}",
                 id, client);
@@ -248,7 +252,7 @@ public final class LogPointManager {
             LogPointContext context =
                     new LogPointContext(
                             probe, id, logExpression, conditionExpression,
-                            expireSecs, expireCount, condition, disable, stdoutEnabled, logLevel, predefined);
+                            expireSecs, expireCount, condition, disable, stdoutEnabled, logLevel, predefined, tags);
             ProbeAction<LogPointContext> action = createLogPointAction(context);
 
             ProbeAction<LogPointContext> existingAction = ProbeSupport.replaceProbeAction(probe, action);
@@ -268,7 +272,9 @@ public final class LogPointManager {
             if (existingContext != null) {
                 existingContext.removed = true;
                 existingContext.cancelExpireScheduleIfExist();
+                unMapLogPointFromTags(id, existingContext.tags);
             }
+            mapLogPointWithTags(id, context.tags);
         } catch (Throwable t) {
             LOGGER.error(
                     "Error occurred while updating logpoint at class {} on line {} from client {}: {}",
@@ -317,6 +323,7 @@ public final class LogPointManager {
             }
 
             logPointProbeMap.remove(id);
+            unMapLogPointFromAllTags(id);
 
             ProbeSupport.removeProbe(probe.getId(), true);
 
@@ -405,4 +412,28 @@ public final class LogPointManager {
         }
     }
 
+    private static void mapLogPointWithTags(String id, Set<String> tags) {
+        if (tags != null && tags.size() > 0) {
+            for (String tag : tags) {
+                if (!tagLogPointListMap.containsKey(tag)) {
+                    tagLogPointListMap.putIfAbsent(tag, new ArrayList<>());
+                }
+                tagLogPointListMap.get(tag).add(id);
+            }
+        }
+    }
+
+    private static void unMapLogPointFromTags(String id, Set<String> tags) {
+        if (tags != null && tags.size() > 0) {
+            for (String tag : tags) {
+                if (tagLogPointListMap.containsKey(tag)) {
+                    tagLogPointListMap.get(tag).remove(id);
+                }
+            }
+        }
+    }
+
+    private static void unMapLogPointFromAllTags(String id) {
+        tagLogPointListMap.keySet().forEach(tag -> tagLogPointListMap.get(tag).remove(id));
+    }
 }

@@ -50,7 +50,8 @@ public class FilterLogPointsResponseHandler
                     logPoint.isStdoutEnabled(),
                     logPoint.getLogLevel(),
                     logPoint.isDisabled(),
-                    logPoint.isPredefined());
+                    logPoint.isPredefined(),
+                    logPoint.getTags());
             BrokerManager.publishApplicationStatus();
             if (logPoint.getClient() != null) {
                 BrokerManager.publishApplicationStatus(logPoint.getClient());

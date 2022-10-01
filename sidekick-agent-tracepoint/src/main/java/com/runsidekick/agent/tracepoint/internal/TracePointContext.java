@@ -4,6 +4,7 @@ import com.runsidekick.agent.probe.domain.Probe;
 import com.runsidekick.agent.probe.condition.Condition;
 import com.runsidekick.agent.probe.domain.ProbeContext;
 
+import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -18,14 +19,15 @@ class TracePointContext implements ProbeContext {
     final int expireCount;
     final boolean enableTracing;
     final Condition condition;
+    final boolean predefined;
+    final Set<String> tags;
     volatile ScheduledFuture expireFuture;
     volatile boolean disabled;
     volatile boolean removed;
-    volatile boolean predefined;
 
     TracePointContext(Probe probe, String id,
                       String conditionExpression, int expireSecs, int expireCount, boolean enableTracing,
-                      Condition condition, boolean disabled, boolean predefined) {
+                      Condition condition, boolean disabled, boolean predefined, Set<String> tags) {
         this.probe = probe;
         this.id = id;
         this.conditionExpression = conditionExpression;
@@ -35,6 +37,7 @@ class TracePointContext implements ProbeContext {
         this.condition = condition;
         this.disabled = disabled;
         this.predefined = predefined;
+        this.tags = tags;
     }
 
     @Override

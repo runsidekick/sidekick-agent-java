@@ -24,8 +24,8 @@ public class App {
         String tracePointId1 = UUID.randomUUID().toString();
         String tracePointId2 = UUID.randomUUID().toString();
 
-        TracePointSupport.putTracePoint(tracePointId1, Hello.class.getName(), 19, "serkan@thundra.io", null, "name==\"kaan\" AND i > 0", -1, -1, true, false, false);
-        TracePointSupport.putTracePoint(tracePointId2, Hello.class.getName(), 27, "serkan@thundra.io", null, "idx > 0", -1, -1, true, false, false);
+        TracePointSupport.putTracePoint(tracePointId1, Hello.class.getName(), 19, "serkan@thundra.io", null, "name==\"kaan\" AND i > 0", -1, -1, true, false, false, null);
+        TracePointSupport.putTracePoint(tracePointId2, Hello.class.getName(), 27, "serkan@thundra.io", null, "idx > 0", -1, -1, true, false, false,null);
 
         List<String> names = Arrays.asList("serkan", "seyda", "kaan");
         int i = 0;

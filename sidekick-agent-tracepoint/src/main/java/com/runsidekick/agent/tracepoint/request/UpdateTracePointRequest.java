@@ -2,6 +2,8 @@ package com.runsidekick.agent.tracepoint.request;
 
 import com.runsidekick.agent.broker.request.impl.BaseRequest;
 
+import java.util.Set;
+
 /**
  * @author serkan
  */
@@ -17,6 +19,7 @@ public class UpdateTracePointRequest extends BaseRequest {
     private boolean enableTracing;
     private boolean disable;
     private boolean predefined;
+    private Set<String> tags;
 
     public String getTracePointId() {
         return tracePointId;
@@ -98,6 +101,14 @@ public class UpdateTracePointRequest extends BaseRequest {
         this.predefined = predefined;
     }
 
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "UpdateTracePointRequest{" +
@@ -113,6 +124,7 @@ public class UpdateTracePointRequest extends BaseRequest {
                 ", id='" + id + '\'' +
                 ", client='" + client + '\'' +
                 ", predefined=" + predefined +
+                ", tags='" + tags +'\'' +
                 '}';
     }
 

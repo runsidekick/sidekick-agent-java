@@ -1,4 +1,4 @@
-package com.runsidekick.agent.tracepoint.serialization;
+package com.runsidekick.agent.probe.serialization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -96,7 +96,7 @@ public class DeserializationTest {
     }
 
     public static void main(String[] args) throws Exception {
-        String json = SerializationHelper.serializeValue(new X());
+        String json = SerializationHelper.serializeValue(new X(), null);
         System.out.println(json);
         DeserializationHelper.Variable var = DeserializationHelper.parseVariable(json);
         System.out.println(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(var));

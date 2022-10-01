@@ -1,13 +1,14 @@
 package com.runsidekick.agent.tracepoint.internal;
 
+import com.runsidekick.agent.api.dataredaction.DataRedactionContext;
 import com.runsidekick.agent.broker.error.CodedException;
 import com.runsidekick.agent.broker.error.CommonErrorCodes;
 import com.runsidekick.agent.core.logger.LoggerFactory;
 import com.runsidekick.agent.probe.domain.Probe;
 import com.runsidekick.agent.probe.domain.ProbeAction;
+import com.runsidekick.agent.probe.domain.Variable;
 import com.runsidekick.agent.tracepoint.TracePointSupport;
 import com.runsidekick.agent.tracepoint.domain.Frame;
-import com.runsidekick.agent.tracepoint.domain.Variable;
 import com.runsidekick.agent.tracepoint.domain.Variables;
 import com.runsidekick.agent.tracepoint.event.TracePointSnapshotEvent;
 import com.runsidekick.agent.tracepoint.event.TracePointSnapshotFailedEvent;
@@ -53,6 +54,9 @@ class TracePointAction implements ProbeAction<TracePointContext> {
                                          Object callee, String[] localVarNames, Object[] localVarValues) {
         List<Variable> variableList = new ArrayList<>(localVarNames.length + 1);
 
+        DataRedactionContext dataRedactionContext = new DataRedactionContext(
+                clazz, fileName, className, line, methodName);
+
         if (callee != null) {
             variableList.add(new Variable("this", callee));
         }
@@ -67,7 +71,7 @@ class TracePointAction implements ProbeAction<TracePointContext> {
         }
         Map<String, String> serializedVariables = new LinkedHashMap<>(variableList.size());
         for (Variable variable : variableList) {
-            String serializedValue = Variable.VariableSerializer.serializeVariable(variable);
+            String serializedValue = Variable.VariableSerializer.serializeVariable(variable, dataRedactionContext);
             serializedVariables.put(variable.getName(), serializedValue);
         }
 
@@ -85,6 +89,7 @@ class TracePointAction implements ProbeAction<TracePointContext> {
         Throwable throwable = new Throwable();
 
         TracePointSupport.publishTracePointEvent(() -> {
+
             StackTraceElement[] stackTraceElements = stackTraceProvider.getStackTrace(throwable, 3);
             List<Frame> frames = new ArrayList<>(stackTraceElements.length);
 
