@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.runsidekick.agent.probe.domain.Variable;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,7 +49,7 @@ public class Variables {
             } else {
                 gen.writeStartObject();
                 for (Variable variable : variables.variables) {
-                    gen.writeFieldName(variable.name);
+                    gen.writeFieldName(variable.getName());
                     Variable.VariableSerializer.serializeValue(gen, variable);
                 }
                 gen.writeEndObject();

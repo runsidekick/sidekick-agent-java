@@ -1,4 +1,4 @@
-package com.runsidekick.agent.tracepoint.serialization;
+package com.runsidekick.agent.probe.serialization;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -36,10 +36,12 @@ import com.fasterxml.jackson.databind.type.MapLikeType;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.util.NameTransformer;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+import com.runsidekick.agent.api.dataredaction.DataRedactionContext;
+import com.runsidekick.agent.core.logger.LoggerFactory;
 import com.runsidekick.agent.core.util.PropertyUtils;
+import com.runsidekick.agent.dataredaction.DataRedactionHelper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import com.runsidekick.agent.core.logger.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -88,6 +90,7 @@ public final class SerializationHelper {
     public static final String IGNORED_PROPERTY = "@ignored";
     public static final String IGNORED_REASON_PROPERTY = "@ignored-reason";
     public static final String ERRONEOUS_PROPERTY = "@erroneous";
+    public static final String DATA_REDACTED_PROPERTY = "@data-redacted";
     public static final Set<Class> IGNORED_TYPES = new HashSet<Class>() {{
         add(InputStream.class);
         add(OutputStream.class);
@@ -155,6 +158,7 @@ public final class SerializationHelper {
         private final SerializationContext parentSerializationContext;
         private boolean disableTypeInjecting;
         private Class serializingFieldType;
+        private DataRedactionContext dataRedactionContext;
 
         private SerializationContext(SerializationContext parentSerializationContext) {
             this.parentSerializationContext = parentSerializationContext;
@@ -188,6 +192,15 @@ public final class SerializationHelper {
 
         private static void destroy() {
             threadLocalSerializationContext.remove();
+        }
+
+        public DataRedactionContext getDataRedactionContext() {
+            if (dataRedactionContext == null) {
+                if (parentSerializationContext != null) {
+                    return parentSerializationContext.getDataRedactionContext();
+                }
+            }
+            return dataRedactionContext;
         }
 
     }
@@ -267,10 +280,11 @@ public final class SerializationHelper {
             gen.writeStartObject();
             gen.writeFieldName(TYPE_PROPERTY);
             gen.writeString(getTypeName(value));
-            boolean writeEmptyArray = false;
+            boolean writeEmptyArray = false, isArray = false, shouldRedactVariable = shouldRedactVariable(gen);
             if (value != null) {
                 Class valueClass = value.getClass();
                 if (valueClass.isArray()) {
+                    isArray = true;
                     gen.writeFieldName(ARRAY_PROPERTY);
                     gen.writeBoolean(true);
                     int length = Array.getLength(value);
@@ -294,9 +308,17 @@ public final class SerializationHelper {
                 }
             }
             gen.writeFieldName(VALUE_PROPERTY);
+            if (shouldRedactVariable) {
+                if (isArray) {
+                    writeEmptyArray(gen);
+                } else {
+                    gen.writeNull();
+                }
+                wrapAsRedacted(gen);
+                return false;
+            }
             if (writeEmptyArray) {
-                gen.writeStartArray();
-                gen.writeEndArray();
+                writeEmptyArray(gen);
                 return false;
             }
             return true;
@@ -589,6 +611,13 @@ public final class SerializationHelper {
         }
 
         @Override
+        public MapSerializer withResolved(BeanProperty property, JsonSerializer<?> keySerializer,
+                                          JsonSerializer<?> valueSerializer, Set<String> ignored,
+                                          Set<String> included, boolean sortKeys) {
+            return this.withResolved(property, keySerializer, valueSerializer, ignored, sortKeys);
+        }
+
+        @Override
         public MapSerializer withFilterId(Object filterId) {
             if (_filterId == filterId) {
                 return this;
@@ -660,7 +689,12 @@ public final class SerializationHelper {
 
         @Override
         protected void serializeValue(Boolean value, JsonGenerator jgen) throws IOException {
-            jgen.writeBoolean(value);
+            if (shouldRedactVariable(jgen)) {
+                jgen.writeNull();
+                wrapAsRedacted(jgen);
+            } else {
+                jgen.writeBoolean(value);
+            }
         }
 
     }
@@ -673,7 +707,12 @@ public final class SerializationHelper {
 
         @Override
         protected void serializeValue(Byte value, JsonGenerator jgen) throws IOException {
-            jgen.writeNumber(value);
+            if (shouldRedactVariable(jgen)) {
+                jgen.writeNull();
+                wrapAsRedacted(jgen);
+            } else {
+                jgen.writeNumber(value);
+            }
         }
 
     }
@@ -686,7 +725,12 @@ public final class SerializationHelper {
 
         @Override
         protected void serializeValue(Short value, JsonGenerator jgen) throws IOException {
-            jgen.writeNumber(value);
+            if (shouldRedactVariable(jgen)) {
+                jgen.writeNull();
+                wrapAsRedacted(jgen);
+            } else {
+                jgen.writeNumber(value);
+            }
         }
 
     }
@@ -699,7 +743,12 @@ public final class SerializationHelper {
 
         @Override
         protected void serializeValue(Integer value, JsonGenerator jgen) throws IOException {
-            jgen.writeNumber(value);
+            if (shouldRedactVariable(jgen)) {
+                jgen.writeNull();
+                wrapAsRedacted(jgen);
+            } else {
+                jgen.writeNumber(value);
+            }
         }
 
     }
@@ -712,7 +761,12 @@ public final class SerializationHelper {
 
         @Override
         protected void serializeValue(Float value, JsonGenerator jgen) throws IOException {
-            jgen.writeNumber(value);
+            if (shouldRedactVariable(jgen)) {
+                jgen.writeNull();
+                wrapAsRedacted(jgen);
+            } else {
+                jgen.writeNumber(value);
+            }
         }
 
     }
@@ -725,7 +779,12 @@ public final class SerializationHelper {
 
         @Override
         protected void serializeValue(Long value, JsonGenerator jgen) throws IOException {
-            jgen.writeNumber(value);
+            if (shouldRedactVariable(jgen)) {
+                jgen.writeNull();
+                wrapAsRedacted(jgen);
+            } else {
+                jgen.writeNumber(value);
+            }
         }
 
     }
@@ -738,7 +797,12 @@ public final class SerializationHelper {
 
         @Override
         protected void serializeValue(Double value, JsonGenerator jgen) throws IOException {
-            jgen.writeNumber(value);
+            if (shouldRedactVariable(jgen)) {
+                jgen.writeNull();
+                wrapAsRedacted(jgen);
+            } else {
+                jgen.writeNumber(value);
+            }
         }
 
     }
@@ -767,15 +831,19 @@ public final class SerializationHelper {
 
         @Override
         protected void serializeValue(byte[] value, JsonGenerator jgen) throws IOException {
-            if (value.length > MAX_SERIALIZED_ARRAY_LENGTH) {
-                jgen.writeStartArray();
-                jgen.writeEndArray();
+            if (shouldRedactVariable(jgen)) {
+                writeEmptyArray(jgen);
+                wrapAsRedacted(jgen);
             } else {
-                jgen.writeStartArray(value.length);
-                for (int i = 0; i < value.length; i++) {
-                    jgen.writeNumber(value[i]);
+                if (value.length > MAX_SERIALIZED_ARRAY_LENGTH) {
+                    writeEmptyArray(jgen);
+                } else {
+                    jgen.writeStartArray(value.length);
+                    for (int i = 0; i < value.length; i++) {
+                        jgen.writeNumber(value[i]);
+                    }
+                    jgen.writeEndArray();
                 }
-                jgen.writeEndArray();
             }
         }
 
@@ -1022,28 +1090,9 @@ public final class SerializationHelper {
         }
     }
 
-    private static String serializeData(Object obj) throws IOException {
-        ObjectMapper objectMapper = threadLocalObjectMapper.get();
-        JsonFactory jsonFactory = objectMapper.getFactory();
-        JsonWriter jw = new JsonWriter(jsonFactory._getBufferRecycler());
-        threadLocalJsonWriter.set(jw);
-        try {
-            objectMapper.writeValue(jw, obj);
-            return jw.getAndClear();
-        } finally {
-            threadLocalJsonWriter.remove();
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static String serializeValue(Object value) throws IOException {
-        SerializationContext.destroy();
-        try {
-            return serializeData(value);
-        } finally {
-            SerializationContext.destroy();
-        }
+    private static void writeEmptyArray(JsonGenerator gen) throws IOException {
+        gen.writeStartArray();
+        gen.writeEndArray();
     }
 
     private static void wrapAsErroneous(JsonGenerator gen, String fieldName, String errorMessage) throws IOException {
@@ -1061,14 +1110,6 @@ public final class SerializationHelper {
         gen.writeEndObject();
     }
 
-    public static String wrapAsErroneous(String errorMessage) {
-        JSONObject wrappedValue = new JSONObject();
-        wrappedValue.put(TYPE_PROPERTY, String.class.getName());
-        wrappedValue.put(VALUE_PROPERTY, "[ERROR] " + errorMessage);
-        wrappedValue.put(ERRONEOUS_PROPERTY, true);
-        return wrappedValue.toString();
-    }
-
     private static void wrapAsIgnored(JsonGenerator gen, String fieldName, String ignoreReason) throws IOException {
         gen.writeFieldName(fieldName);
         gen.writeStartObject();
@@ -1081,6 +1122,61 @@ public final class SerializationHelper {
         gen.writeEndObject();
     }
 
+    private static void wrapAsRedacted(JsonGenerator gen) throws IOException {
+        gen.writeFieldName(DATA_REDACTED_PROPERTY);
+        gen.writeBoolean(true);
+    }
+
+    private static boolean shouldRedactVariable(JsonGenerator gen) {
+        String fieldName = gen.getOutputContext().getCurrentName();
+        if (fieldName == null || TYPE_PROPERTY.equals(fieldName) || VALUE_PROPERTY.equals(fieldName)) {
+            fieldName = gen.getOutputContext().getParent().getCurrentName();
+        }
+        SerializationContext serializationContext = SerializationContext.get();
+        if (serializationContext != null) {
+            return DataRedactionHelper.shouldRedactVariable(serializationContext.getDataRedactionContext(), fieldName);
+        }
+        return DataRedactionHelper.shouldRedactVariable(null, fieldName);
+    }
+
+    private static String serializeData(Object obj, DataRedactionContext dataRedactionContext) throws IOException {
+        SerializationContext serializationContext = SerializationContext.start();
+        serializationContext.dataRedactionContext = dataRedactionContext;
+        try {
+            ObjectMapper objectMapper = threadLocalObjectMapper.get();
+            JsonFactory jsonFactory = objectMapper.getFactory();
+            JsonWriter jw = new JsonWriter(jsonFactory._getBufferRecycler());
+            threadLocalJsonWriter.set(jw);
+            try {
+                objectMapper.writeValue(jw, obj);
+                return jw.getAndClear();
+            } finally {
+                threadLocalJsonWriter.remove();
+            }
+        } finally {
+            serializationContext.close();
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static String serializeValue(Object value, DataRedactionContext dataRedactionContext) throws IOException {
+        SerializationContext.destroy();
+        try {
+            return serializeData(value, dataRedactionContext);
+        } finally {
+            SerializationContext.destroy();
+        }
+    }
+
+    public static String wrapAsErroneous(String errorMessage) {
+        JSONObject wrappedValue = new JSONObject();
+        wrappedValue.put(TYPE_PROPERTY, String.class.getName());
+        wrappedValue.put(VALUE_PROPERTY, "[ERROR] " + errorMessage);
+        wrappedValue.put(ERRONEOUS_PROPERTY, true);
+        return wrappedValue.toString();
+    }
+
     public static String wrapAsIgnored(String ignoreReason) throws IOException {
         JSONObject wrappedValue = new JSONObject();
         wrappedValue.put(TYPE_PROPERTY, String.class.getName());
@@ -1089,13 +1185,11 @@ public final class SerializationHelper {
         return wrappedValue.toString();
     }
 
-    public static String serializeValueFormatted(Object value) throws IOException {
-        SerializationContext.destroy();
-        try {
-            return threadLocalObjectMapper.get().writerWithDefaultPrettyPrinter().writeValueAsString(value);
-        } finally {
-            SerializationContext.destroy();
-        }
+    public static String wrapAsRedacted() {
+        JSONObject wrappedValue = new JSONObject();
+        wrappedValue.put(VALUE_PROPERTY, "null");
+        wrappedValue.put(DATA_REDACTED_PROPERTY, true);
+        return wrappedValue.toString();
     }
 
     public static boolean shouldSkipValueFromSerialization(Object value) {
@@ -1113,6 +1207,15 @@ public final class SerializationHelper {
             message = message.substring(0, MAX_SERIALIZATION_ERROR_MESSAGE_LENGTH - 4) + " ...";
         }
         return message;
+    }
+
+    public static String serializeValueFormatted(Object value) throws IOException {
+        SerializationContext.destroy();
+        try {
+            return threadLocalObjectMapper.get().writerWithDefaultPrettyPrinter().writeValueAsString(value);
+        } finally {
+            SerializationContext.destroy();
+        }
     }
 
 }

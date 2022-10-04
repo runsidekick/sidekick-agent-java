@@ -1,5 +1,7 @@
 package com.runsidekick.agent.tracepoint.domain;
 
+import com.runsidekick.agent.probe.domain.Variable;
+
 import java.util.List;
 
 /**

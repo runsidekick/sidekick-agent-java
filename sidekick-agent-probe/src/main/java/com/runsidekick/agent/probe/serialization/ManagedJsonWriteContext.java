@@ -1,4 +1,4 @@
-package com.runsidekick.agent.tracepoint.serialization;
+package com.runsidekick.agent.probe.serialization;
 
 import com.fasterxml.jackson.core.JsonStreamContext;
 import com.fasterxml.jackson.core.json.DupDetector;
