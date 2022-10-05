@@ -156,8 +156,8 @@ public final class ProbeManager {
                 if (className == null || shouldIgnoreClassLoader(loader)) {
                     return null;
                 }
-
                 className = className.replace("/", ".");
+                className = getValidClassName(loader, className);
 
                 registerLoadedClass(loader, className);
 
@@ -240,19 +240,28 @@ public final class ProbeManager {
     }
 
     private static String getValidClassName(String className) {
-        return getValidClassName(className, 1);
+        String validClassName = null;
+        for (ClassLoader classLoader : classLoaderMap.keySet()) {
+            validClassName = getValidClassName(classLoader, className);
+            if (validClassName != null) {
+                return validClassName;
+            }
+        }
+        return null;
     }
 
-    private static String getValidClassName(String className, int tryCount) {
+    private static String getValidClassName(ClassLoader classLoader, String className) {
+        return getValidClassName(classLoader, className, 1);
+    }
+
+    private static String getValidClassName(ClassLoader classLoader, String className, int tryCount) {
         String classResourceName = className.replace('.', '/').concat(".class");
-        for (ClassLoader classLoader : classLoaderMap.keySet()) {
-            if (classLoader.getResource(classResourceName) != null) {
-                return className;
-            }
+        if (classLoader.getResource(classResourceName) != null) {
+            return className;
         }
         if (tryCount++ < maxTryValidateClass) {
             className = className.substring(className.indexOf(".") + 1);
-            return getValidClassName(className, tryCount);
+            return getValidClassName(classLoader, className, tryCount);
         }
         return null;
     }
