@@ -1,9 +1,11 @@
-package com.runsidekick.agent.broker.request.impl;
+package com.runsidekick.agent.probetag.request;
+
+import com.runsidekick.agent.broker.request.impl.BaseRequest;
 
 /**
  * @author yasin.kalafat
  */
-public class EnableTagRequest extends BaseRequest {
+public class DisableProbeTagRequest extends BaseRequest {
 
     private String tag;
 

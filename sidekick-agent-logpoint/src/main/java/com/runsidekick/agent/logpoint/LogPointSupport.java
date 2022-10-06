@@ -134,6 +134,20 @@ public final class LogPointSupport {
         LogPointManager.disableLogPoint(id, client);
     }
 
+    public static void enableTag(String tag, String client) {
+        if (client == null) {
+            client = BrokerManager.BROKER_CLIENT;
+        }
+        LogPointManager.enableTag(tag, client);
+    }
+
+    public static void disableTag(String tag, String client) {
+        if (client == null) {
+            client = BrokerManager.BROKER_CLIENT;
+        }
+        LogPointManager.disableTag(tag, client);
+    }
+
     public static void publishLogPointEvent(Event event) {
         BrokerManager.serializeAndPublishEvent(event);
     }

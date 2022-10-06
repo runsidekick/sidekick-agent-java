@@ -132,6 +132,20 @@ public final class TracePointSupport {
         TracePointManager.disableTracePoint(id, client);
     }
 
+    public static void enableTag(String tag, String client) {
+        if (client == null) {
+            client = BrokerManager.BROKER_CLIENT;
+        }
+        TracePointManager.enableTag(tag, client);
+    }
+
+    public static void disableTag(String tag, String client) {
+        if (client == null) {
+            client = BrokerManager.BROKER_CLIENT;
+        }
+        TracePointManager.disableTag(tag, client);
+    }
+
     public static void publishTracePointEvent(Event event) {
         BrokerManager.serializeAndPublishEvent(event);
     }

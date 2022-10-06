@@ -409,6 +409,22 @@ public final class TracePointManager {
         }
     }
 
+    public static void enableTag(String tag, String client) {
+        LOGGER.debug(
+                "Enabling tracepoints with tag {} from client {}",
+                tag, client);
+
+        tagTracePointListMap.get(tag).forEach(tracePointId -> enableDisableTracePoint(tracePointId, client, false));
+    }
+
+    public static void disableTag(String tag, String client) {
+        LOGGER.debug(
+                "Disabling tracepoints with tag {} from client {}",
+                tag, client);
+
+        tagTracePointListMap.get(tag).forEach(tracePointId -> enableDisableTracePoint(tracePointId, client, true));
+    }
+
     private static void mapTracePointWithTags(String id, Set<String> tags) {
         if (tags != null && tags.size() > 0) {
             for (String tag : tags) {

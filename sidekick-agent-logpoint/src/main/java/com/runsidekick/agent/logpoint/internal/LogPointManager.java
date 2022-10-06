@@ -412,6 +412,22 @@ public final class LogPointManager {
         }
     }
 
+    public static void enableTag(String tag, String client) {
+        LOGGER.debug(
+                "Enabling tracepoints with tag {} from client {}",
+                tag, client);
+
+        tagLogPointListMap.get(tag).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, false));
+    }
+
+    public static void disableTag(String tag, String client) {
+        LOGGER.debug(
+                "Disabling tracepoints with tag {} from client {}",
+                tag, client);
+
+        tagLogPointListMap.get(tag).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, true));
+    }
+
     private static void mapLogPointWithTags(String id, Set<String> tags) {
         if (tags != null && tags.size() > 0) {
             for (String tag : tags) {
