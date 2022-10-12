@@ -23,7 +23,6 @@ public class LogPoint {
     private int expireCount;
     private String fileHash;
     private boolean disabled;
-    private boolean predefined;
     private Set<String> tags;
 
     public LogPoint() {
@@ -31,7 +30,7 @@ public class LogPoint {
 
     public LogPoint(String id, String fileName, String className, int lineNo, String client, String logExpression,
                     String conditionExpression, int expireSecs, int expireCount,
-                    boolean disabled, boolean stdoutEnabled, String logLevel, boolean predefined, Set<String> tags) {
+                    boolean disabled, boolean stdoutEnabled, String logLevel, Set<String> tags) {
         this.id = id;
         this.fileName = fileName;
         this.className = className;
@@ -44,7 +43,6 @@ public class LogPoint {
         this.disabled = disabled;
         this.stdoutEnabled = stdoutEnabled;
         this.logLevel = logLevel;
-        this.predefined = predefined;
         this.tags = tags;
     }
 
@@ -152,14 +150,6 @@ public class LogPoint {
         this.logLevel = logLevel;
     }
 
-    public boolean isPredefined() {
-        return predefined;
-    }
-
-    public void setPredefined(boolean predefined) {
-        this.predefined = predefined;
-    }
-
     public Set<String> getTags() {
         return tags;
     }
@@ -184,7 +174,6 @@ public class LogPoint {
                 ", stdoutEnabled=" + stdoutEnabled +
                 ", logLevel='" + logLevel + '\'' +
                 ", disabled=" + disabled +
-                ", predefined=" + predefined +
                 ", tags='" + tags + '\'' +
                 '}';
     }

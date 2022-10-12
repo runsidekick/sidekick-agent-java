@@ -28,7 +28,6 @@ public class UpdateTracePointRequestHandler
                     request.getExpireCount(),
                     request.isEnableTracing(),
                     request.isDisable(),
-                    request.isPredefined(),
                     request.getTags());
             BrokerManager.publishApplicationStatus();
             if (request.getClient() != null) {

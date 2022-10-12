@@ -44,11 +44,11 @@ public class App {
         String logPointId1 = UUID.randomUUID().toString();
         String logPointId2 = UUID.randomUUID().toString();
 
-        TracePointSupport.putTracePoint(tracePointId1, Hello.class.getName(), 19, client, null, null, -1, -1, true, false, true, tags1);
-        TracePointSupport.putTracePoint(tracePointId2, Hello.class.getName(), 27, client, null, null, -1, -1, true, false, true, tags2);
+        TracePointSupport.putTracePoint(tracePointId1, Hello.class.getName(), 19, client, null, null, -1, -1, true, false, tags1);
+        TracePointSupport.putTracePoint(tracePointId2, Hello.class.getName(), 27, client, null, null, -1, -1, true, false, tags2);
 
-        LogPointSupport.putLogPoint(logPointId1, Hello.class.getName(), 19, client, "log1", null, null, -1, -1, false, "INFO", false, true, tags1);
-        LogPointSupport.putLogPoint(logPointId2, Hello.class.getName(), 27, client, "log2", null, null, -1, -1, false, "INFO", false, true, tags2);
+        LogPointSupport.putLogPoint(logPointId1, Hello.class.getName(), 19, client, "log1", null, null, -1, -1, false, "INFO", false, tags1);
+        LogPointSupport.putLogPoint(logPointId2, Hello.class.getName(), 27, client, "log2", null, null, -1, -1, false, "INFO", false, tags2);
 
         disableTag(client, "tag1");
 

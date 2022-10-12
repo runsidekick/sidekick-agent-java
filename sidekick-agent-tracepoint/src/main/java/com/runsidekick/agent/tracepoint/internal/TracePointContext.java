@@ -19,7 +19,6 @@ class TracePointContext implements ProbeContext {
     final int expireCount;
     final boolean enableTracing;
     final Condition condition;
-    final boolean predefined;
     final Set<String> tags;
     volatile ScheduledFuture expireFuture;
     volatile boolean disabled;
@@ -27,7 +26,7 @@ class TracePointContext implements ProbeContext {
 
     TracePointContext(Probe probe, String id,
                       String conditionExpression, int expireSecs, int expireCount, boolean enableTracing,
-                      Condition condition, boolean disabled, boolean predefined, Set<String> tags) {
+                      Condition condition, boolean disabled, Set<String> tags) {
         this.probe = probe;
         this.id = id;
         this.conditionExpression = conditionExpression;
@@ -36,7 +35,6 @@ class TracePointContext implements ProbeContext {
         this.enableTracing = enableTracing;
         this.condition = condition;
         this.disabled = disabled;
-        this.predefined = predefined;
         this.tags = tags;
     }
 
@@ -57,8 +55,8 @@ class TracePointContext implements ProbeContext {
     }
 
     @Override
-    public boolean isPredefined() {
-        return predefined;
+    public boolean hasTag() {
+        return tags != null && tags.size() > 0;
     }
 
     void cancelExpireScheduleIfExist() {

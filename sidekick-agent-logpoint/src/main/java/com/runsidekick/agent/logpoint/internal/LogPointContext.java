@@ -3,6 +3,7 @@ package com.runsidekick.agent.logpoint.internal;
 import com.runsidekick.agent.probe.domain.Probe;
 import com.runsidekick.agent.probe.condition.Condition;
 import com.runsidekick.agent.probe.domain.ProbeContext;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
@@ -21,7 +22,6 @@ class LogPointContext implements ProbeContext {
     final int expireSecs;
     final int expireCount;
     final Condition condition;
-    final boolean predefined;
     final Set<String> tags;
     volatile ScheduledFuture expireFuture;
     volatile boolean disabled;
@@ -30,7 +30,7 @@ class LogPointContext implements ProbeContext {
     LogPointContext(Probe probe, String id,
                     String logExpression, String conditionExpression, int expireSecs, int expireCount,
                     Condition condition, boolean disabled, boolean stdoutEnabled, String logLevel,
-                    boolean predefined, Set<String> tags) {
+                    Set<String> tags) {
         this.probe = probe;
         this.id = id;
         this.logExpression = logExpression;
@@ -41,7 +41,6 @@ class LogPointContext implements ProbeContext {
         this.disabled = disabled;
         this.stdoutEnabled = stdoutEnabled;
         this.logLevel = logLevel;
-        this.predefined = predefined;
         this.tags = tags;
     }
 
@@ -62,8 +61,8 @@ class LogPointContext implements ProbeContext {
     }
 
     @Override
-    public boolean isPredefined() {
-        return predefined;
+    public boolean hasTag() {
+        return tags != null && tags.size() > 0;
     }
 
     public String getLogExpression() {

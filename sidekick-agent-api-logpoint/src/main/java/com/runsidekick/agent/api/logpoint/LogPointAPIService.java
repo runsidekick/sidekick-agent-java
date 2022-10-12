@@ -15,11 +15,11 @@ public interface LogPointAPIService {
 
     String putLogPoint(String className, int lineNo, String client, String logExpression,
                        String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                       boolean stdoutEnabled, String logLevel, boolean disable, boolean predefined, Set<String> tags);
+                       boolean stdoutEnabled, String logLevel, boolean disable, Set<String> tags);
 
     void updateLogPoint(String id, String client, String logExpression,
                         String conditionExpression, int expireSecs, int expireCount, boolean disable,
-                        boolean stdoutEnabled, String logLevel, boolean predefined, Set<String> tags);
+                        boolean stdoutEnabled, String logLevel, Set<String> tags);
 
     void removeLogPoint(String id, String client);
 

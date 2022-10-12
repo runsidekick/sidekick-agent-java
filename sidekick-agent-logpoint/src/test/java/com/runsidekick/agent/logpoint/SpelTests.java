@@ -35,12 +35,12 @@ public class SpelTests {
 
         CollectionTest.listTest();
 
-//        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), Hello.class.getName(), 21, "yasin@thundra.io", logExpression, null, null, -1, -1, false, false, null);
-//        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), Hello.class.getName(), 27, "yasin@thundra.io", logExpression2, null, "idx > 0", -1, -1, false, false, null);
-//        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), CollectionTest.class.getName(), 14, "yasin@thundra.io", logExpression4List, null, null, -1, -1, false, false, null);
-//        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), CollectionTest.class.getName(), 15, "yasin@thundra.io", logExpression4List2, null, null, -1, -1, false, false, null);
-//        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), CollectionTest.class.getName(), 12, "yasin@thundra.io", logExpression4List3, "t.doubleVal % 3 != 0", null, -1, -1, false, false, null);
-        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), ObjectTest.class.getName(), 8, "yasin@thundra.io", logExpression4Object, null, null, -1, -1,true, "INFO", false, false, null);
+//        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), Hello.class.getName(), 21, "yasin@thundra.io", logExpression, null, null, -1, -1, false, null);
+//        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), Hello.class.getName(), 27, "yasin@thundra.io", logExpression2, null, "idx > 0", -1, -1, false, null);
+//        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), CollectionTest.class.getName(), 14, "yasin@thundra.io", logExpression4List, null, null, -1, -1, false, null);
+//        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), CollectionTest.class.getName(), 15, "yasin@thundra.io", logExpression4List2, null, null, -1, -1, false, null);
+//        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), CollectionTest.class.getName(), 12, "yasin@thundra.io", logExpression4List3, "t.doubleVal % 3 != 0", null, -1, -1, false, null);
+        LogPointSupport.putLogPoint(UUID.randomUUID().toString(), ObjectTest.class.getName(), 8, "yasin@thundra.io", logExpression4Object, null, null, -1, -1,true, "INFO", false, null);
 
         List<String> names = Arrays.asList("person1", "person2", "person3");
         int i = 0;

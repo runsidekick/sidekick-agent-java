@@ -64,14 +64,14 @@ public final class TracePointSupport {
 
     public static void putTracePoint(String id, String className, int lineNo, String client,
                                      String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing, boolean disable, boolean predefined, Set<String> tags) {
+                                     boolean enableTracing, boolean disable, Set<String> tags) {
         putTracePoint(id, null, className, lineNo, client, fileHash,
-                conditionExpression, expireSecs, expireCount, enableTracing, disable, predefined, tags);
+                conditionExpression, expireSecs, expireCount, enableTracing, disable, tags);
     }
 
     public static void putTracePoint(String id, String fileName, String className, int lineNo, String client,
                                      String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing, boolean disable, boolean predefined, Set<String> tags) {
+                                     boolean enableTracing, boolean disable, Set<String> tags) {
         if (client == null) {
             client = BrokerManager.BROKER_CLIENT;
         }
@@ -87,12 +87,12 @@ public final class TracePointSupport {
         }
         TracePointManager.putTracePoint(
                 id, fileName, className, lineNo, client, fileHash, conditionExpression,
-                expireSecs, expireCount, enableTracing, disable, predefined, tags);
+                expireSecs, expireCount, enableTracing, disable, tags);
     }
 
     public static void updateTracePoint(String id, String client,
                                         String conditionExpression, int expireSecs, int expireCount,
-                                        boolean enableTracing, boolean disable, boolean predefined, Set<String> tags) {
+                                        boolean enableTracing, boolean disable, Set<String> tags) {
         if (client == null) {
             client = BrokerManager.BROKER_CLIENT;
         }
@@ -108,7 +108,7 @@ public final class TracePointSupport {
         }
         TracePointManager.updateTracePoint(
                 id, client, conditionExpression,
-                expireSecs, expireCount, enableTracing, disable, predefined, tags);
+                expireSecs, expireCount, enableTracing, disable, tags);
     }
 
     public static void removeTracePoint(String id, String client) {

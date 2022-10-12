@@ -44,14 +44,14 @@ public final class LogPointAPI {
         public String putLogPoint(String className, int lineNo, String client, String logExpression,
                                   String fileHash, String conditionExpression,
                                   int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel,
-                                  boolean disable, boolean predefined, Set<String> tags) {
+                                  boolean disable, Set<String> tags) {
             return null;
         }
 
         @Override
         public void updateLogPoint(String id, String client, String logExpression,
                                    String conditionExpression, int expireSecs, int expireCount, boolean disable,
-                                   boolean stdoutEnabled, String logLevel, boolean predefined, Set<String> tags) {
+                                   boolean stdoutEnabled, String logLevel, Set<String> tags) {
         }
 
         @Override
@@ -79,21 +79,20 @@ public final class LogPointAPI {
     public static String putLogPoint(String className, int lineNo, String logExpression,
                                      String fileHash, String conditionExpression,
                                      int expireSecs, int expireCount,
-                                     boolean stdoutEnabled, String logLevel, boolean disable, 
-                                     boolean predefined, Set<String> tags) {
+                                     boolean stdoutEnabled, String logLevel, boolean disable, Set<String> tags) {
         return logPointAPIService.putLogPoint(
                 className, lineNo, null, logExpression,
                 fileHash, conditionExpression,
-                expireSecs, expireCount, stdoutEnabled, logLevel, disable, predefined, tags);
+                expireSecs, expireCount, stdoutEnabled, logLevel, disable, tags);
     }
 
     public static void updateLogPoint(String id, String logExpression,
                                       String conditionExpression, int expireSecs, int expireCount, boolean disable,
-                                      boolean stdoutEnabled, String logLevel, boolean predefined, Set<String> tags) {
+                                      boolean stdoutEnabled, String logLevel, Set<String> tags) {
         logPointAPIService.updateLogPoint(
                 id, null, logExpression,
                 conditionExpression, expireSecs,
-                expireCount, disable, stdoutEnabled, logLevel, predefined, tags);
+                expireCount, disable, stdoutEnabled, logLevel, tags);
     }
 
     public static void removeLogPoint(String id) {

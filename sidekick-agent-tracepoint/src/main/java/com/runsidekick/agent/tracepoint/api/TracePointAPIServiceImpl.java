@@ -38,7 +38,7 @@ public class TracePointAPIServiceImpl implements TracePointAPIService {
     public String putTracePoint(String className, int lineNo, String client,
                                 String fileHash, String conditionExpression,
                                 int expireSecs, int expireCount,
-                                boolean enableTracing, boolean disable, boolean predefined, Set<String> tags) {
+                                boolean enableTracing, boolean disable, Set<String> tags) {
         if (StringUtils.isNullOrEmpty(client)) {
             client = CLIENT;
         }
@@ -47,21 +47,21 @@ public class TracePointAPIServiceImpl implements TracePointAPIService {
                 id, className, lineNo, client,
                 fileHash, conditionExpression,
                 expireSecs, expireCount,
-                enableTracing, disable, predefined, tags);
+                enableTracing, disable, tags);
         return id;
     }
 
     @Override
     public void updateTracePoint(String id, String client,
                                  String conditionExpression, int expireSecs, int expireCount,
-                                 boolean enableTracing, boolean disable, boolean predefined, Set<String> tags) {
+                                 boolean enableTracing, boolean disable, Set<String> tags) {
         if (StringUtils.isNullOrEmpty(client)) {
             client = CLIENT;
         }
         TracePointSupport.updateTracePoint(
                 id, client,
                 conditionExpression, expireSecs, expireCount,
-                enableTracing, disable, predefined, tags);
+                enableTracing, disable, tags);
     }
 
     @Override

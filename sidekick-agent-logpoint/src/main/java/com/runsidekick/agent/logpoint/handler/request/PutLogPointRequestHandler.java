@@ -37,7 +37,6 @@ public class PutLogPointRequestHandler
                     request.isStdoutEnabled(),
                     request.getLogLevel(),
                     request.isDisable(),
-                    request.isPredefined(),
                     request.getTags());
             BrokerManager.publishApplicationStatus();
             if (request.getClient() != null) {

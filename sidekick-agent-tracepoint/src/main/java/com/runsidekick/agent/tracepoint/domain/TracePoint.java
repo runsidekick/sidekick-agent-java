@@ -21,7 +21,6 @@ public class TracePoint {
     private boolean tracingEnabled;
     private String fileHash;
     private boolean disabled;
-    private boolean predefined;
     protected Set<String> tags;
 
     public TracePoint() {
@@ -29,7 +28,7 @@ public class TracePoint {
 
     public TracePoint(String id, String fileName, String className, int lineNo, String client,
                       String conditionExpression, int expireSecs, int expireCount,
-                      boolean tracingEnabled, boolean disabled, boolean predefined, Set<String> tags) {
+                      boolean tracingEnabled, boolean disabled, Set<String> tags) {
         this.id = id;
         this.fileName = fileName;
         this.className = className;
@@ -40,7 +39,6 @@ public class TracePoint {
         this.expireCount = expireCount;
         this.tracingEnabled = tracingEnabled;
         this.disabled = disabled;
-        this.predefined = predefined;
         this.tags = tags;
     }
 
@@ -132,14 +130,6 @@ public class TracePoint {
         this.disabled = disabled;
     }
 
-    public boolean isPredefined() {
-        return predefined;
-    }
-
-    public void setPredefined(boolean predefined) {
-        this.predefined = predefined;
-    }
-
     public Set<String> getTags() {
         return tags;
     }
@@ -161,7 +151,6 @@ public class TracePoint {
                 ", expireCount=" + expireCount +
                 ", tracingEnabled=" + tracingEnabled +
                 ", disabled=" + disabled +
-                ", predefined=" + predefined +
                 ", tags='" + tags + '\'' +
                 '}';
     }

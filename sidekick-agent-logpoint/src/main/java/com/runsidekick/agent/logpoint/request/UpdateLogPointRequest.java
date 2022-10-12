@@ -20,7 +20,6 @@ public class UpdateLogPointRequest extends BaseRequest {
     private boolean disable;
     private boolean stdoutEnabled;
     private String logLevel;
-    private boolean predefined;
     private Set<String> tags;
 
     public String getLogPointId() {
@@ -111,14 +110,6 @@ public class UpdateLogPointRequest extends BaseRequest {
         this.logLevel = logLevel;
     }
 
-    public boolean isPredefined() {
-        return predefined;
-    }
-
-    public void setPredefined(boolean predefined) {
-        this.predefined = predefined;
-    }
-
     public Set<String> getTags() {
         return tags;
     }
@@ -143,7 +134,6 @@ public class UpdateLogPointRequest extends BaseRequest {
                 ", client='" + client + '\'' +
                 ", stdoutEnabled=" + stdoutEnabled +
                 ", logLevel='" + logLevel + '\'' +
-                ", predefined=" + predefined +
                 ", tags='" + tags +'\'' +
                 '}';
     }

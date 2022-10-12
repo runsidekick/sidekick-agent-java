@@ -14,10 +14,10 @@ public interface TracePointAPIService {
 
     String putTracePoint(String className, int lineNo, String client,
                          String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                         boolean enableTracing, boolean disable, boolean predefined, Set<String> tags);
+                         boolean enableTracing, boolean disable, Set<String> tags);
     void updateTracePoint(String id, String client,
                           String conditionExpression, int expireSecs, int expireCount,
-                          boolean enableTracing, boolean disable, boolean predefined, Set<String> tags);
+                          boolean enableTracing, boolean disable, Set<String> tags);
     void removeTracePoint(String id, String client);
     void enableTracePoint(String id, String client);
     void disableTracePoint(String id, String client);
