@@ -155,7 +155,6 @@ public final class ProbeManager {
                 if (className == null || shouldIgnoreClassLoader(loader)) {
                     return null;
                 }
-
                 className = className.replace("/", ".");
 
                 registerLoadedClass(loader, className);
