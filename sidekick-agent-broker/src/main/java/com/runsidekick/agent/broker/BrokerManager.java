@@ -10,6 +10,7 @@ import com.runsidekick.agent.broker.domain.ApplicationStatus;
 import com.runsidekick.agent.broker.handler.response.ResponseHandler;
 import com.runsidekick.agent.broker.request.impl.FilterLogPointsRequest;
 import com.runsidekick.agent.broker.request.impl.FilterTracePointsRequest;
+import com.runsidekick.agent.broker.request.impl.GetConfigRequest;
 import com.runsidekick.agent.broker.response.MutableResponse;
 import com.runsidekick.agent.broker.response.Response;
 import com.runsidekick.agent.broker.response.impl.ErrorResponse;
@@ -391,8 +392,16 @@ public class BrokerManager {
 
     static void onBrokerConnected() {
         LOGGER.info("Connected to broker");
+        getConfig();
         getExistingTracePoints();
         getExistingLogPoints();
+    }
+
+    private static void getConfig() {
+        GetConfigRequest request = new GetConfigRequest();
+        request.setId(UUID.randomUUID().toString());
+
+        doPublishRequest(request);
     }
 
     private static void getExistingTracePoints() {
