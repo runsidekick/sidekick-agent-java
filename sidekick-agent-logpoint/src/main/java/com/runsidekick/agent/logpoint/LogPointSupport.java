@@ -3,6 +3,7 @@ package com.runsidekick.agent.logpoint;
 import com.runsidekick.agent.api.logpoint.LogPointAPI;
 import com.runsidekick.agent.broker.BrokerManager;
 import com.runsidekick.agent.broker.event.Event;
+import com.runsidekick.agent.broker.support.BaseProbeSupport;
 import com.runsidekick.agent.core.logger.LoggerFactory;
 import com.runsidekick.agent.logpoint.api.LogPointAPIServiceImpl;
 import com.runsidekick.agent.logpoint.domain.LogPoint;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * @author yasin
  */
-public final class LogPointSupport {
+public final class LogPointSupport implements BaseProbeSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LogPointSupport.class);
 
@@ -138,5 +139,10 @@ public final class LogPointSupport {
 
     public static void printLogMessage(String logLevel, LogPointEvent logPointEvent) {
         System.out.printf("%-24s[%-5s] %s\n", logPointEvent.getCreatedAt(), logLevel, logPointEvent.getLogMessage());
+    }
+
+    @Override
+    public void detach() {
+        LogPointManager.removeAllLogPoints();
     }
 }

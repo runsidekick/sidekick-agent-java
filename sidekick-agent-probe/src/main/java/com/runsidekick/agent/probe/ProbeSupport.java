@@ -1,6 +1,7 @@
 package com.runsidekick.agent.probe;
 
 import com.runsidekick.agent.broker.event.Event;
+import com.runsidekick.agent.broker.support.BaseProbeSupport;
 import com.runsidekick.agent.probe.condition.Condition;
 import com.runsidekick.agent.probe.domain.ClassType;
 import com.runsidekick.agent.probe.domain.Probe;
@@ -18,7 +19,7 @@ import java.io.IOException;
 /**
  * @author serkan
  */
-public final class ProbeSupport {
+public final class ProbeSupport implements BaseProbeSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProbeSupport.class);
 
@@ -94,4 +95,8 @@ public final class ProbeSupport {
         BrokerManager.serializeAndPublishEvent(event);
     }
 
+    @Override
+    public void detach() {
+        ProbeManager.removeAllProbes();
+    }
 }

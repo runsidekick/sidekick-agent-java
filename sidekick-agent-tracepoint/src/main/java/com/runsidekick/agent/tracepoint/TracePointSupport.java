@@ -1,5 +1,6 @@
 package com.runsidekick.agent.tracepoint;
 
+import com.runsidekick.agent.broker.support.BaseProbeSupport;
 import com.runsidekick.agent.tracepoint.api.TracePointAPIServiceImpl;
 import com.runsidekick.agent.tracepoint.domain.TracePoint;
 import com.runsidekick.agent.tracepoint.internal.TracePointManager;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * @author serkan
  */
-public final class TracePointSupport {
+public final class TracePointSupport implements BaseProbeSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TracePointSupport.class);
 
@@ -139,4 +140,8 @@ public final class TracePointSupport {
         BrokerManager.serializeAndPublishEvent(eventSupplier);
     }
 
+    @Override
+    public void detach() {
+        TracePointManager.removeAllTracePoints();
+    }
 }

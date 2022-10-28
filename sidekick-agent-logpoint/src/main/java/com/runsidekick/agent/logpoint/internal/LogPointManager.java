@@ -403,4 +403,7 @@ public final class LogPointManager {
         }
     }
 
+    public static void removeAllLogPoints() {
+        logPointProbeMap.clear();
+    }
 }

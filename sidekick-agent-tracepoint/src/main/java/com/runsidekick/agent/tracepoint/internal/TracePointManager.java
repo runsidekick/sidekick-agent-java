@@ -400,4 +400,7 @@ public final class TracePointManager {
         }
     }
 
+    public static void removeAllTracePoints() {
+        tracePointProbeMap.clear();
+    }
 }

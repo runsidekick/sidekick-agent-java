@@ -140,6 +140,13 @@ public final class ProbeManager {
         classNames.add(className);
     }
 
+    public static void removeAllProbes() {
+        for (String id : probeMap.keySet()) {
+            removeProbe(id, false);
+        }
+        probeMap.clear();
+    }
+
     private static class TransformContext {
 
         private Throwable error;

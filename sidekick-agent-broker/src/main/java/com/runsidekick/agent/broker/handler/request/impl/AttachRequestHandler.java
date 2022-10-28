@@ -1,5 +1,6 @@
 package com.runsidekick.agent.broker.handler.request.impl;
 
+import com.runsidekick.agent.broker.BrokerManager;
 import com.runsidekick.agent.broker.request.impl.AttachRequest;
 import com.runsidekick.agent.broker.response.impl.AttachResponse;
 
@@ -16,6 +17,21 @@ public class AttachRequestHandler extends BaseRequestHandler<AttachRequest, Atta
 
     @Override
     public AttachResponse handleRequest(AttachRequest request) {
-        return null;
+        try {
+            BrokerManager.attach();
+
+            BrokerManager.publishApplicationStatus();
+            if (request.getClient() != null) {
+                BrokerManager.publishApplicationStatus(request.getClient());
+            }
+            return new AttachResponse().
+                    setRequestId(request.getId()).
+                    setClient(request.getClient());
+        } catch (Throwable error) {
+            return new AttachResponse().
+                    setRequestId(request.getId()).
+                    setClient(request.getClient()).
+                    setError(error);
+        }
     }
 }
