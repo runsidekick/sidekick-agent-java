@@ -6,6 +6,7 @@ import com.runsidekick.agent.api.tracepoint.TracePointAPIService;
 import com.runsidekick.agent.broker.BrokerManager;
 import com.runsidekick.agent.core.util.StringUtils;
 
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -37,7 +38,7 @@ public class TracePointAPIServiceImpl implements TracePointAPIService {
     public String putTracePoint(String className, int lineNo, String client,
                                 String fileHash, String conditionExpression,
                                 int expireSecs, int expireCount,
-                                boolean enableTracing, boolean disable) {
+                                boolean enableTracing, boolean disable, Set<String> tags) {
         if (StringUtils.isNullOrEmpty(client)) {
             client = CLIENT;
         }
@@ -46,21 +47,21 @@ public class TracePointAPIServiceImpl implements TracePointAPIService {
                 id, className, lineNo, client,
                 fileHash, conditionExpression,
                 expireSecs, expireCount,
-                enableTracing, disable);
+                enableTracing, disable, tags);
         return id;
     }
 
     @Override
     public void updateTracePoint(String id, String client,
                                  String conditionExpression, int expireSecs, int expireCount,
-                                 boolean enableTracing, boolean disable) {
+                                 boolean enableTracing, boolean disable, Set<String> tags) {
         if (StringUtils.isNullOrEmpty(client)) {
             client = CLIENT;
         }
         TracePointSupport.updateTracePoint(
                 id, client,
                 conditionExpression, expireSecs, expireCount,
-                enableTracing, disable);
+                enableTracing, disable, tags);
     }
 
     @Override

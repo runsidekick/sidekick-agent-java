@@ -6,6 +6,7 @@ import com.runsidekick.agent.api.logpoint.LogPointAPIService;
 import com.runsidekick.agent.broker.BrokerManager;
 import com.runsidekick.agent.core.util.StringUtils;
 
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -37,7 +38,7 @@ public class LogPointAPIServiceImpl implements LogPointAPIService {
     public String putLogPoint(String className, int lineNo, String client, String logExpression,
                               String fileHash, String conditionExpression,
                               int expireSecs, int expireCount, boolean stdoutEnabled, String logLevel,
-                              boolean disable) {
+                              boolean disable, Set<String> tags) {
         if (StringUtils.isNullOrEmpty(client)) {
             client = CLIENT;
         }
@@ -45,21 +46,21 @@ public class LogPointAPIServiceImpl implements LogPointAPIService {
         LogPointSupport.putLogPoint(
                 id, className, lineNo,
                 client, logExpression, fileHash, conditionExpression,
-                expireSecs, expireCount, stdoutEnabled, logLevel, disable);
+                expireSecs, expireCount, stdoutEnabled, logLevel, disable, tags);
         return id;
     }
 
     @Override
     public void updateLogPoint(String id, String client, String logExpression,
                                String conditionExpression, int expireSecs, int expireCount,
-                               boolean disable, boolean stdoutEnabled, String logLevel) {
+                               boolean disable, boolean stdoutEnabled, String logLevel, Set<String> tags) {
         if (StringUtils.isNullOrEmpty(client)) {
             client = CLIENT;
         }
         LogPointSupport.updateLogPoint(
                 id, client, logExpression,
                 conditionExpression, expireSecs, expireCount,
-                disable, stdoutEnabled, logLevel);
+                disable, stdoutEnabled, logLevel, tags);
     }
 
     @Override

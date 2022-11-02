@@ -66,7 +66,7 @@ public class TracePointSnapshotTestRule implements TestRule {
                 String tracePointId = TracePointAPI.putTracePoint(
                         tracePoint.className, tracePoint.lineNo,
                         null, tracePoint.conditionExpression,
-                        TracePointAPI.TRACEPOINT_MAX_EXPIRY_COUNT, TracePointAPI.TRACEPOINT_MAX_EXPIRY_SECS, true, false);
+                        TracePointAPI.TRACEPOINT_MAX_EXPIRY_COUNT, TracePointAPI.TRACEPOINT_MAX_EXPIRY_SECS, true, false, null);
                 tracePointMap.put(tracePointId, tracePoint);
             } catch (Exception ex) {
                 LOGGER.severe(String.format(

@@ -2,6 +2,8 @@ package com.runsidekick.agent.tracepoint.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Set;
+
 /**
  * @author serkan
  */
@@ -17,24 +19,16 @@ public class TracePoint {
     private int expireSecs;
     private int expireCount;
     private boolean tracingEnabled;
-    protected String fileHash;
-
-    public String getFileHash() {
-        return fileHash;
-    }
-
-    public void setFileHash(String fileHash) {
-        this.fileHash = fileHash;
-    }
-
+    private String fileHash;
     private boolean disabled;
+    protected Set<String> tags;
 
     public TracePoint() {
     }
 
     public TracePoint(String id, String fileName, String className, int lineNo, String client,
                       String conditionExpression, int expireSecs, int expireCount,
-                      boolean tracingEnabled, boolean disabled) {
+                      boolean tracingEnabled, boolean disabled, Set<String> tags) {
         this.id = id;
         this.fileName = fileName;
         this.className = className;
@@ -45,6 +39,7 @@ public class TracePoint {
         this.expireCount = expireCount;
         this.tracingEnabled = tracingEnabled;
         this.disabled = disabled;
+        this.tags = tags;
     }
 
     public String getId() {
@@ -111,6 +106,14 @@ public class TracePoint {
         this.expireCount = expireCount;
     }
 
+    public String getFileHash() {
+        return fileHash;
+    }
+
+    public void setFileHash(String fileHash) {
+        this.fileHash = fileHash;
+    }
+
     public boolean isTracingEnabled() {
         return tracingEnabled;
     }
@@ -127,6 +130,14 @@ public class TracePoint {
         this.disabled = disabled;
     }
 
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "TracePoint{" +
@@ -140,6 +151,7 @@ public class TracePoint {
                 ", expireCount=" + expireCount +
                 ", tracingEnabled=" + tracingEnabled +
                 ", disabled=" + disabled +
+                ", tags='" + tags + '\'' +
                 '}';
     }
 
