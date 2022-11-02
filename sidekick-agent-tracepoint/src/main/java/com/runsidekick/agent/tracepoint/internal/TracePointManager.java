@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -33,6 +34,7 @@ public final class TracePointManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(TracePointManager.class);
 
     private static final Map<String, Probe> tracePointProbeMap = new ConcurrentHashMap<>();
+    private static final Map<String, List<String>> tagTracePointListMap = new ConcurrentHashMap<>();
     private static final ScheduledExecutorService tracePointExpireScheduler =
             ExecutorUtils.newScheduledExecutorService("tracepoint-expire-scheduler");
     private static boolean initialized;
@@ -124,7 +126,8 @@ public final class TracePointManager {
                                             context.expireSecs,
                                             context.expireCount,
                                             context.enableTracing,
-                                            context.disabled);
+                                            context.disabled,
+                                            context.tags);
                             tracePoints.add(tracePoint);
                         }
                     });
@@ -134,7 +137,7 @@ public final class TracePointManager {
 
     public static void putTracePoint(String id, String fileName, String className, int lineNo, String client,
                                      String fileHash, String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing, boolean disable) {
+                                     boolean enableTracing, boolean disable, Set<String> tags) {
         LOGGER.debug(
                 "Putting tracepoint with id {} to class {} on line {} from client {}",
                 id, className, lineNo, client);
@@ -170,7 +173,7 @@ public final class TracePointManager {
                     new TracePointContext(
                             probe, id, conditionExpression,
                             expireSecs, expireCount, enableTracing,
-                            condition, disable);
+                            condition, disable, tags);
             ProbeAction<TracePointContext> action = createTracePointAction(context);
 
             boolean added = ProbeSupport.addProbeAction(probe, action) == null;
@@ -182,8 +185,9 @@ public final class TracePointManager {
             }
 
             tracePointProbeMap.put(id, probe);
+            mapTracePointWithTags(id, context.tags);
 
-            if (expireSecs > 0) {
+            if (expireSecs > 0 && !context.hasTag()) {
                 context.expireFuture =
                         tracePointExpireScheduler.schedule(
                                 new TracePointExpireTask(context), expireSecs, TimeUnit.SECONDS);
@@ -206,7 +210,7 @@ public final class TracePointManager {
 
     public static synchronized void updateTracePoint(String id, String client,
                                                      String conditionExpression, int expireSecs, int expireCount,
-                                                     boolean enableTracing, boolean disable) {
+                                                     boolean enableTracing, boolean disable, Set<String> tags) {
         LOGGER.debug(
                 "Updating tracepoint with id {} from client {}",
                 id, client);
@@ -243,7 +247,7 @@ public final class TracePointManager {
                     new TracePointContext(
                             probe, id, conditionExpression,
                             expireSecs, expireCount, enableTracing,
-                            condition, disable);
+                            condition, disable, tags);
             ProbeAction<TracePointContext> action = createTracePointAction(context);
 
             ProbeAction<TracePointContext> existingAction = ProbeSupport.replaceProbeAction(probe, action);
@@ -253,7 +257,7 @@ public final class TracePointManager {
                         id, client);
                 throw new CodedException(TracePointErrorCodes.NO_TRACEPOINT_EXIST_WITH_ID, id, client);
             }
-            if (expireSecs > 0) {
+            if (expireSecs > 0 && !context.hasTag()) {
                 context.expireFuture =
                         tracePointExpireScheduler.schedule(
                                 new TracePointExpireTask(context), expireSecs, TimeUnit.SECONDS);
@@ -263,7 +267,9 @@ public final class TracePointManager {
             if (existingContext != null) {
                 existingContext.removed = true;
                 existingContext.cancelExpireScheduleIfExist();
+                unMapTracePointFromTags(id, existingContext.tags);
             }
+            mapTracePointWithTags(id, context.tags);
         } catch (Throwable t) {
             LOGGER.error(
                     "Error occurred while updating tracepoint at class {} on line {} from client {}: {}",
@@ -312,6 +318,7 @@ public final class TracePointManager {
             }
 
             tracePointProbeMap.remove(id);
+            unMapTracePointFromAllTags(id);
 
             ProbeSupport.removeProbe(probe.getId(), true);
 
@@ -398,6 +405,47 @@ public final class TracePointManager {
                             : TracePointErrorCodes.ENABLE_TRACEPOINT_WITH_ID_FAILED,
                     id, client, t.getMessage());
         }
+    }
+
+    public static void enableTag(String tag, String client) {
+        LOGGER.debug(
+                "Enabling tracepoints with tag {} from client {}",
+                tag, client);
+
+        tagTracePointListMap.get(tag).forEach(tracePointId -> enableDisableTracePoint(tracePointId, client, false));
+    }
+
+    public static void disableTag(String tag, String client) {
+        LOGGER.debug(
+                "Disabling tracepoints with tag {} from client {}",
+                tag, client);
+
+        tagTracePointListMap.get(tag).forEach(tracePointId -> enableDisableTracePoint(tracePointId, client, true));
+    }
+
+    private static void mapTracePointWithTags(String id, Set<String> tags) {
+        if (tags != null && tags.size() > 0) {
+            for (String tag : tags) {
+                if (!tagTracePointListMap.containsKey(tag)) {
+                    tagTracePointListMap.putIfAbsent(tag, new ArrayList<>());
+                }
+                tagTracePointListMap.get(tag).add(id);
+            }
+        }
+    }
+    
+    private static void unMapTracePointFromTags(String id, Set<String> tags) {
+        if (tags != null && tags.size() > 0) {
+            for (String tag : tags) {
+                if (tagTracePointListMap.containsKey(tag)) {
+                    tagTracePointListMap.get(tag).remove(id);
+                }
+            }
+        }
+    }
+    
+    private static void unMapTracePointFromAllTags(String id) {
+        tagTracePointListMap.keySet().forEach(tag -> tagTracePointListMap.get(tag).remove(id));
     }
 
 }

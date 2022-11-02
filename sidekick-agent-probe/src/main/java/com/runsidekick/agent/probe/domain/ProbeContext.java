@@ -18,4 +18,8 @@ public interface ProbeContext {
     default void expire() {
     }
 
+    default boolean hasTag() {
+        return false;
+    }
+
 }

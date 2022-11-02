@@ -520,7 +520,8 @@ public final class ProbeManager {
         return getProbeMetadata(probe.getClassName(), probe.getLineNo(), probe.getClient());
     }
 
-    public static synchronized InternalProbe getOrPutProbe(String fileName, String className, int lineNo, String client) {
+    public static synchronized InternalProbe getOrPutProbe(
+            String fileName, String className, int lineNo, String client) {
         className = normalizeClassName(className);
 
         LOGGER.debug("Putting probe with id {} to class {} on line {} from client {}", className, lineNo, client);

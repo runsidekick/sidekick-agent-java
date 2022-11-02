@@ -2,6 +2,8 @@ package com.runsidekick.agent.logpoint.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Set;
+
 /**
  * @author yasin
  */
@@ -19,24 +21,16 @@ public class LogPoint {
     private String conditionExpression;
     private int expireSecs;
     private int expireCount;
-    protected String fileHash;
-
-    public String getFileHash() {
-        return fileHash;
-    }
-
-    public void setFileHash(String fileHash) {
-        this.fileHash = fileHash;
-    }
-
+    private String fileHash;
     private boolean disabled;
+    private Set<String> tags;
 
     public LogPoint() {
     }
 
     public LogPoint(String id, String fileName, String className, int lineNo, String client, String logExpression,
                     String conditionExpression, int expireSecs, int expireCount,
-                    boolean disabled, boolean stdoutEnabled, String logLevel) {
+                    boolean disabled, boolean stdoutEnabled, String logLevel, Set<String> tags) {
         this.id = id;
         this.fileName = fileName;
         this.className = className;
@@ -49,6 +43,7 @@ public class LogPoint {
         this.disabled = disabled;
         this.stdoutEnabled = stdoutEnabled;
         this.logLevel = logLevel;
+        this.tags = tags;
     }
 
     public String getId() {
@@ -123,6 +118,14 @@ public class LogPoint {
         this.expireCount = expireCount;
     }
 
+    public String getFileHash() {
+        return fileHash;
+    }
+
+    public void setFileHash(String fileHash) {
+        this.fileHash = fileHash;
+    }
+
     public boolean isDisabled() {
         return disabled;
     }
@@ -147,6 +150,14 @@ public class LogPoint {
         this.logLevel = logLevel;
     }
 
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "LogPoint{" +
@@ -163,6 +174,7 @@ public class LogPoint {
                 ", stdoutEnabled=" + stdoutEnabled +
                 ", logLevel='" + logLevel + '\'' +
                 ", disabled=" + disabled +
+                ", tags='" + tags + '\'' +
                 '}';
     }
 }

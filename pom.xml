@@ -78,6 +78,7 @@
         <module>sidekick-agent-data-redaction</module>
         <module>sidekick-agent-logpoint</module>
         <module>sidekick-agent-probe</module>
+        <module>sidekick-agent-probe-tag</module>
         <module>sidekick-agent-tracepoint</module>
 
         <module>sidekick-agent-all</module>
@@ -137,7 +138,22 @@
             </dependency>
             <dependency>
                 <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-logpoint</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
                 <artifactId>sidekick-agent-probe</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-probe-tag</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.runsidekick.agent</groupId>
+                <artifactId>sidekick-agent-tracepoint</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
             <!-- ========================================== -->

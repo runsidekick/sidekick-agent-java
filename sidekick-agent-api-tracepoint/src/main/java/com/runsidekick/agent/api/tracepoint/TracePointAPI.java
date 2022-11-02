@@ -2,6 +2,7 @@ package com.runsidekick.agent.api.tracepoint;
 
 import com.runsidekick.agent.api.broker.publisher.EventPublisher;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,14 +44,14 @@ public final class TracePointAPI {
         public String putTracePoint(String className, int lineNo, String client,
                                     String fileHash, String conditionExpression,
                                     int expireSecs, int expireCount,
-                                    boolean enableTracing, boolean disable) {
+                                    boolean enableTracing, boolean disable, Set<String> tags) {
             return null;
         }
 
         @Override
         public void updateTracePoint(String id, String client,
                                      String conditionExpression, int expireSecs, int expireCount,
-                                     boolean enableTracing, boolean disable) {
+                                     boolean enableTracing, boolean disable, Set<String> tags) {
         }
 
         @Override
@@ -78,20 +79,20 @@ public final class TracePointAPI {
     public static String putTracePoint(String className, int lineNo,
                                        String fileHash, String conditionExpression,
                                        int expireSecs, int expireCount,
-                                       boolean enableTracing, boolean disable) {
+                                       boolean enableTracing, boolean disable, Set<String> tags) {
         return tracePointAPIService.putTracePoint(
                 className, lineNo, null,
                 fileHash, conditionExpression,
-                expireSecs, expireCount, enableTracing, disable);
+                expireSecs, expireCount, enableTracing, disable, tags);
     }
 
     public static void updateTracePoint(String id,
                                         String conditionExpression, int expireSecs, int expireCount,
-                                        boolean enableTracing, boolean disable) {
+                                        boolean enableTracing, boolean disable, Set<String> tags) {
         tracePointAPIService.updateTracePoint(
                 id, null,
                 conditionExpression, expireSecs,
-                expireCount, enableTracing, disable);
+                expireCount, enableTracing, disable, tags);
     }
 
     public static void removeTracePoint(String id) {
