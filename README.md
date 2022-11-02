@@ -115,9 +115,6 @@ The advantage of Sidekick over classical APM solutions is that, Sidekick
 - has zero overhead when you don't have any tracepoint or log point but APMs have always
 - doesn't produce too much garbage data because it collects data only at the certain points you specified as long as that point (tracepoint/logpoint) is active
 
-#### Benchmarks
-- [Production Debuggers — 2022 Benchmark Results](https://medium.com/runsidekick/sidekick-blog-production-debuggers-2022-benchmark-results-part-1-ec173d0f8ccd)
-
 ### Usage
 ##### Supported JVMs and Languages
 JDK 8+ is supported
@@ -139,6 +136,8 @@ Source bundling: https://docs.runsidekick.com/installation/installing-agents/jav
 ##### Build command:
 ```mvn clean package```
 
+### Benchmarks
+- [Production Debuggers — 2022 Benchmark Results](https://medium.com/runsidekick/sidekick-blog-production-debuggers-2022-benchmark-results-part-1-ec173d0f8ccd?utm_source=sidekick-java-readme)
 
 ##  Official Sidekick Agents
 

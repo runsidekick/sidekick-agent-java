@@ -1,5 +1,7 @@
 package com.runsidekick.agent.probe.util;
 
+import com.runsidekick.agent.core.util.PropertyUtils;
+
 /**
  * Utility class for class related stuff.
  *
@@ -11,17 +13,21 @@ public class ClassUtils {
     private static final String SRC_MAIN_KOTLIN_DIRECTORY_NAME = "src/main/kotlin/";
     private static final String SRC_MAIN_SCALA_DIRECTORY_NAME = "src/main/scala/";
     private static final String SRC_DIRECTORY_NAME = "src/";
+    private static final String CUSTOM_SRC_DIRECTORY_NAME =
+            PropertyUtils.getStringProperty("sidekick.agent.source.root", "src/");
     private static final String[] SRC_DIRECTORIES = new String[] {
             SRC_MAIN_JAVA_DIRECTORY_NAME,
             SRC_MAIN_KOTLIN_DIRECTORY_NAME,
             SRC_MAIN_SCALA_DIRECTORY_NAME,
-            SRC_DIRECTORY_NAME
+            SRC_DIRECTORY_NAME,
+            CUSTOM_SRC_DIRECTORY_NAME
     };
 
     private ClassUtils() {
     }
 
     public static String extractClassName(String fileName) {
+        fileName = GitHelper.normalizeFileName(fileName);
         fileName = normalizeFileName(fileName);
         for (String srcDirectory : SRC_DIRECTORIES) {
             int idx = fileName.indexOf(srcDirectory);
