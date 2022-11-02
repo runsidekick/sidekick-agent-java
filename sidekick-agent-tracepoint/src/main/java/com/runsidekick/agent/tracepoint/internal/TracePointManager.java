@@ -377,17 +377,6 @@ public final class TracePointManager {
         tracePointProbeMap.clear();
     }
 
-    private static void mapTracePointWithTags(String id, Set<String> tags) {
-        if (tags != null && tags.size() > 0) {
-            for (String tag : tags) {
-                if (!tagTracePointListMap.containsKey(tag)) {
-                    tagTracePointListMap.putIfAbsent(tag, new ArrayList<>());
-                }
-                tagTracePointListMap.get(tag).add(id);
-            }
-        }
-    }
-
     private static synchronized void enableDisableTracePoint(String id, String client, boolean disable) {
         Probe probe = tracePointProbeMap.get(id);
         if (probe == null) {
@@ -435,6 +424,17 @@ public final class TracePointManager {
                             ? TracePointErrorCodes.DISABLE_TRACEPOINT_WITH_ID_FAILED
                             : TracePointErrorCodes.ENABLE_TRACEPOINT_WITH_ID_FAILED,
                     id, client, t.getMessage());
+        }
+    }
+
+    private static void mapTracePointWithTags(String id, Set<String> tags) {
+        if (tags != null && tags.size() > 0) {
+            for (String tag : tags) {
+                if (!tagTracePointListMap.containsKey(tag)) {
+                    tagTracePointListMap.putIfAbsent(tag, new ArrayList<>());
+                }
+                tagTracePointListMap.get(tag).add(id);
+            }
         }
     }
     
