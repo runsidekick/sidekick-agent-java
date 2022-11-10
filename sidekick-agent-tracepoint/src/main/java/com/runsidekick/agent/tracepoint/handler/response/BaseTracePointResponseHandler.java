@@ -13,9 +13,9 @@ import com.runsidekick.agent.core.util.StringUtils;
 public abstract class BaseTracePointResponseHandler<Res extends Response>
         extends BaseResponseHandler<Res> {
 
-    public BaseTracePointResponseHandler(String requestName,
+    public BaseTracePointResponseHandler(String responseName,
                                          Class<Res> responseClass) {
-        super(requestName, responseClass);
+        super(responseName, responseClass);
     }
 
     protected void validateLineNo(int lineNo) {
