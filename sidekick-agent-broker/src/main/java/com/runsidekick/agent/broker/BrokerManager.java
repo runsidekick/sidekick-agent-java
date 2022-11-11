@@ -10,6 +10,7 @@ import com.runsidekick.agent.broker.domain.ApplicationStatus;
 import com.runsidekick.agent.broker.handler.response.ResponseHandler;
 import com.runsidekick.agent.broker.request.impl.FilterLogPointsRequest;
 import com.runsidekick.agent.broker.request.impl.FilterTracePointsRequest;
+import com.runsidekick.agent.broker.request.impl.GetConfigRequest;
 import com.runsidekick.agent.broker.response.MutableResponse;
 import com.runsidekick.agent.broker.response.Response;
 import com.runsidekick.agent.broker.response.impl.ErrorResponse;
@@ -23,6 +24,7 @@ import com.runsidekick.agent.broker.handler.request.RequestHandler;
 import com.runsidekick.agent.api.broker.publisher.EventPublisher;
 import com.runsidekick.agent.api.broker.publisher.RequestPublisher;
 import com.runsidekick.agent.broker.request.Request;
+import com.runsidekick.agent.broker.support.BaseProbeSupport;
 import com.runsidekick.agent.core.app.Application;
 import com.runsidekick.agent.core.app.ApplicationInfo;
 import com.runsidekick.agent.core.instance.InstanceDiscovery;
@@ -89,6 +91,8 @@ public class BrokerManager {
                     collect(Collectors.toMap(ResponseHandler::getResponseName, rh -> rh));
     private static final List<ApplicationStatusProvider> applicationStatusProviderList =
             InstanceDiscovery.instancesOf(ApplicationStatusProvider.class);
+    private static final List<BaseProbeSupport> probeSupportList =
+            InstanceDiscovery.instancesOf(BaseProbeSupport.class);
     private static final ThreadLocal<ObjectMapper> threadLocalObjectMapper =
             ThreadLocal.withInitial(() -> createObjectMapper());
 
@@ -97,6 +101,8 @@ public class BrokerManager {
     private static ScheduledExecutorService applicationStatusPublisherExecutorService;
     private static volatile EventPublisher eventPublisher = new BrokerClientEventPublisher();
     private static volatile RequestPublisher requestPublisher = new BrokerClientRequestPublisher();
+
+    private static volatile boolean attached = true;
 
     private BrokerManager() {
     }
@@ -182,6 +188,11 @@ public class BrokerManager {
                 }
                 if (name == null) {
                     LOGGER.error("No message name could be found in message: {}", message);
+                    return;
+                }
+
+                if ((attached && name.equals("AttachRequest"))
+                    || (!attached && !name.equals("AttachRequest"))) {
                     return;
                 }
 
@@ -391,8 +402,16 @@ public class BrokerManager {
 
     static void onBrokerConnected() {
         LOGGER.info("Connected to broker");
+        getConfig();
         getExistingTracePoints();
         getExistingLogPoints();
+    }
+
+    private static void getConfig() {
+        GetConfigRequest request = new GetConfigRequest();
+        request.setId(UUID.randomUUID().toString());
+
+        doPublishRequest(request);
     }
 
     private static void getExistingTracePoints() {
@@ -469,7 +488,7 @@ public class BrokerManager {
     }
 
     public static void publishEvent(Event event) {
-        if (eventPublisherExecutorService != null) {
+        if (attached && eventPublisherExecutorService != null) {
             eventPublisherExecutorService.submit(() -> {
                 doPublishEvent(event);
             });
@@ -477,7 +496,7 @@ public class BrokerManager {
     }
 
     public static void publishEvent(Supplier<Event> eventSupplier) {
-        if (eventPublisherExecutorService != null) {
+        if (attached && eventPublisherExecutorService != null) {
             eventPublisherExecutorService.submit(() -> {
                 Event event = eventSupplier.get();
                 doPublishEvent(event);
@@ -555,6 +574,16 @@ public class BrokerManager {
 
     public static void setEventPublisher(EventPublisher eventPublisher) {
         BrokerManager.eventPublisher = eventPublisher;
+    }
+
+    public static void attach() {
+        attached = true;
+        onBrokerConnected();
+    }
+
+    public static void detach() {
+        attached = false;
+        probeSupportList.forEach(probeSupport -> probeSupport.detach());
     }
 
 }

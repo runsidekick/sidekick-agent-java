@@ -13,9 +13,9 @@ import com.runsidekick.agent.probe.util.ClassUtils;
 public abstract class BaseLogPointResponseHandler<Res extends Response>
         extends BaseResponseHandler<Res> {
 
-    public BaseLogPointResponseHandler(String requestName,
+    public BaseLogPointResponseHandler(String responseName,
                                        Class<Res> responseClass) {
-        super(requestName, responseClass);
+        super(responseName, responseClass);
     }
 
     protected void validateLineNo(int lineNo) {

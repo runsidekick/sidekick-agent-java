@@ -37,6 +37,7 @@ import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.util.NameTransformer;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.runsidekick.agent.api.dataredaction.DataRedactionContext;
+import com.runsidekick.agent.core.config.ConfigProvider;
 import com.runsidekick.agent.core.logger.LoggerFactory;
 import com.runsidekick.agent.core.util.PropertyUtils;
 import com.runsidekick.agent.dataredaction.DataRedactionHelper;
@@ -63,17 +64,21 @@ public final class SerializationHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SerializationHelper.class);
 
+    private static final String MAX_SERIALIZED_DATA_SIZE_PROP_NAME = "sidekick.agent.tracepoint.stacktrace.maxdepth";
+    private static final String MAX_DEPTH_ON_SERIALIZATION_PROP_NAME = "sidekick.agent.tracepoint.serialization.depth.max";
+    private static final String MAX_SERIALIZED_ARRAY_LENGTH_PROP_NAME = "sidekick.agent.tracepoint.serialization.array.length.max";
+
     private static final int MAX_SERIALIZED_DATA_SIZE =
             PropertyUtils.getIntegerProperty(
-                    "sidekick.agent.tracepoint.serialization.size.max",
+                    MAX_SERIALIZED_DATA_SIZE_PROP_NAME,
                     64 * 1024); // 64 KB by default
     private static final int MAX_DEPTH_ON_SERIALIZATION =
             PropertyUtils.getIntegerProperty(
-                    "sidekick.agent.tracepoint.serialization.depth.max",
+                    MAX_DEPTH_ON_SERIALIZATION_PROP_NAME,
                     3);
     private static final int MAX_SERIALIZED_ARRAY_LENGTH =
             PropertyUtils.getIntegerProperty(
-                    "sidekick.agent.tracepoint.serialization.array.length.max",
+                    MAX_SERIALIZED_ARRAY_LENGTH_PROP_NAME,
                     100);
 
     private static final boolean OMIT_WHEN_IGNORED = true;
@@ -144,7 +149,8 @@ public final class SerializationHelper {
         objectMapper.setFilterProvider(
                 new SimpleFilterProvider().
                         addFilter(DepthAwarePropertyFilter.FILTER_ID,
-                                new DepthAwarePropertyFilter(MAX_DEPTH_ON_SERIALIZATION)));
+                                new DepthAwarePropertyFilter(
+                                        ConfigProvider.getIntegerProperty(MAX_DEPTH_ON_SERIALIZATION_PROP_NAME, MAX_DEPTH_ON_SERIALIZATION))));
         objectMapper.registerModule(module);
         objectMapper.registerModule(new AfterburnerModule());
         return objectMapper;
@@ -293,13 +299,13 @@ public final class SerializationHelper {
                         gen.writeFieldName(ARRAY_ELEMENT_TYPE_PROPERTY);
                         gen.writeString(getTypeName(valueClass.getComponentType()));
                     }
-                    if (length > MAX_SERIALIZED_ARRAY_LENGTH) {
+                    if (length > ConfigProvider.getIntegerProperty(MAX_SERIALIZED_ARRAY_LENGTH_PROP_NAME, MAX_SERIALIZED_ARRAY_LENGTH)) {
                         gen.writeFieldName(IGNORED_PROPERTY);
                         gen.writeBoolean(true);
                         gen.writeFieldName(IGNORED_REASON_PROPERTY);
                         gen.writeString(String.format(
                                 "Array size %d is bigger than max array size %d",
-                                length, MAX_SERIALIZED_ARRAY_LENGTH));
+                                length, ConfigProvider.getIntegerProperty(MAX_SERIALIZED_ARRAY_LENGTH_PROP_NAME, MAX_SERIALIZED_ARRAY_LENGTH)));
                         writeEmptyArray = true;
                     }
                 } else if (valueClass.isEnum()) {
@@ -819,13 +825,13 @@ public final class SerializationHelper {
             jgen.writeBoolean(true);
             jgen.writeFieldName(ARRAY_ELEMENT_TYPE_PROPERTY);
             jgen.writeString(byte.class.getName());
-            if (value.length > MAX_SERIALIZED_ARRAY_LENGTH) {
+            if (value.length > ConfigProvider.getIntegerProperty(MAX_SERIALIZED_ARRAY_LENGTH_PROP_NAME, MAX_SERIALIZED_ARRAY_LENGTH)) {
                 jgen.writeFieldName(IGNORED_PROPERTY);
                 jgen.writeBoolean(true);
                 jgen.writeFieldName(IGNORED_REASON_PROPERTY);
                 jgen.writeString(String.format(
                         "Array size %d is bigger than max array size %d",
-                        value.length, MAX_SERIALIZED_ARRAY_LENGTH));
+                        value.length, ConfigProvider.getIntegerProperty(MAX_SERIALIZED_ARRAY_LENGTH_PROP_NAME, MAX_SERIALIZED_ARRAY_LENGTH)));
             }
         }
 
@@ -835,7 +841,7 @@ public final class SerializationHelper {
                 writeEmptyArray(jgen);
                 wrapAsRedacted(jgen);
             } else {
-                if (value.length > MAX_SERIALIZED_ARRAY_LENGTH) {
+                if (value.length > ConfigProvider.getIntegerProperty(MAX_SERIALIZED_ARRAY_LENGTH_PROP_NAME, MAX_SERIALIZED_ARRAY_LENGTH)) {
                     writeEmptyArray(jgen);
                 } else {
                     jgen.writeStartArray(value.length);

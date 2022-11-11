@@ -361,6 +361,26 @@ public final class LogPointManager {
         enableDisableLogPoint(id, client, true);
     }
 
+    public static void enableTag(String tag, String client) {
+        LOGGER.debug(
+                "Enabling tracepoints with tag {} from client {}",
+                tag, client);
+
+        tagLogPointListMap.get(tag).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, false));
+    }
+
+    public static void disableTag(String tag, String client) {
+        LOGGER.debug(
+                "Disabling tracepoints with tag {} from client {}",
+                tag, client);
+
+        tagLogPointListMap.get(tag).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, true));
+    }
+
+    public static void removeAllLogPoints() {
+        logPointProbeMap.clear();
+    }
+
     private static synchronized void enableDisableLogPoint(String id, String client, boolean disable) {
         Probe probe = logPointProbeMap.get(id);
         if (probe == null) {
@@ -409,22 +429,6 @@ public final class LogPointManager {
                             : LogPointErrorCodes.ENABLE_LOGPOINT_WITH_ID_FAILED,
                     id, client, t.getMessage());
         }
-    }
-
-    public static void enableTag(String tag, String client) {
-        LOGGER.debug(
-                "Enabling tracepoints with tag {} from client {}",
-                tag, client);
-
-        tagLogPointListMap.get(tag).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, false));
-    }
-
-    public static void disableTag(String tag, String client) {
-        LOGGER.debug(
-                "Disabling tracepoints with tag {} from client {}",
-                tag, client);
-
-        tagLogPointListMap.get(tag).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, true));
     }
 
     private static void mapLogPointWithTags(String id, Set<String> tags) {
