@@ -1,0 +1,3 @@
+com.runsidekick.agent.broker.handler.request.impl.AttachRequestHandler
+com.runsidekick.agent.broker.handler.request.impl.DetachRequestHandler
+com.runsidekick.agent.broker.handler.request.impl.UpdateConfigRequestHandler

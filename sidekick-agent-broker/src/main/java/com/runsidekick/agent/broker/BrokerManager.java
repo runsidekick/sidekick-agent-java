@@ -484,7 +484,9 @@ public class BrokerManager {
     }
 
     private static void doPublishSerializedEvent(String eventJson) {
-        eventPublisher.publishEvent(eventJson);
+        if (attached) {
+            eventPublisher.publishEvent(eventJson);
+        }
     }
 
     public static void publishEvent(Event event) {
