@@ -28,36 +28,19 @@ jobs:
       - name: Configure Maven settings.xml
         uses: whelk-io/maven-settings-xml-action@v14
         with:
-          repositories: >-
-            [
-              {
-                "id": "thundra-releases",
-                "url": "https://repo.thundra.io/content/repositories/thundra-releases"
-              },
-              {
-                "id": "sidekick-releases",
-                "url": "https://repo.thundra.io/content/repositories/sidekick-releases",
-                "releases": {
-                  "enabled": "true"
-                },
-                "snapshots": {
-                  "enabled": "false"
-                }
-              }
-            ]
           servers: >-
             [
               {
-                "id": "thundra-releases",
-                "username": "${{ secrets.THUNDRA_INTERNAL_REPO_USERNAME}}",
-                "password": "${{ secrets.THUNDRA_INTERNAL_REPO_PASSWORD}}"
-              },
-              {
-                "id": "sidekick-releases",
-                "username": "${{ secrets.THUNDRA_INTERNAL_REPO_USERNAME}}",
-                "password": "${{ secrets.THUNDRA_INTERNAL_REPO_PASSWORD}}"
+                "id": "ossrh",
+                "username": "${{ secrets.SIDEKICK_SONATYPE_NEXUS_USERNAME}}",
+                "password": "${{ secrets.SIDEKICK_SONATYPE_NEXUS_PASSWORD}}"
               }
             ]
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v3
+        with:
+          gpg-private-key: ${{ secrets.SIDEKICK_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SIDEKICK_GPG_PASSPHRASE}}
 
       - name: Build and Release with Maven
         env:
