@@ -7,7 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  publish:
+    name: Release to Maven Central
     runs-on: ubuntu-latest
     steps:
       - name: Check out source
@@ -45,4 +46,4 @@ jobs:
       - name: Build and Release with Maven
         env:
           GITHUB_TOKEN: ${{ secrets.SIDEKICK_DEVOPS_GITHUB_ACCESS_TOKEN }}
-        run: mvn -q clean package release:clean release:prepare release:perform release:clean --batch-mode -P release
+        run: mvn clean package release:clean release:prepare release:perform release:clean --batch-mode -P release
