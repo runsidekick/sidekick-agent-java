@@ -20,6 +20,7 @@ import com.runsidekick.agent.logpoint.error.LogPointErrorCodes;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -366,7 +367,7 @@ public final class LogPointManager {
                 "Enabling tracepoints with tag {} from client {}",
                 tag, client);
 
-        tagLogPointListMap.get(tag).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, false));
+        tagLogPointListMap.getOrDefault(tag, Collections.emptyList()).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, false));
     }
 
     public static void disableTag(String tag, String client) {
@@ -374,7 +375,7 @@ public final class LogPointManager {
                 "Disabling tracepoints with tag {} from client {}",
                 tag, client);
 
-        tagLogPointListMap.get(tag).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, true));
+        tagLogPointListMap.getOrDefault(tag, Collections.emptyList()).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, true));
     }
 
     public static void removeAllLogPoints() {

@@ -18,6 +18,7 @@ import com.runsidekick.agent.tracepoint.error.TracePointErrorCodes;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -362,7 +363,7 @@ public final class TracePointManager {
                 "Enabling tracepoints with tag {} from client {}",
                 tag, client);
 
-        tagTracePointListMap.get(tag).forEach(tracePointId -> enableDisableTracePoint(tracePointId, client, false));
+        tagTracePointListMap.getOrDefault(tag, Collections.emptyList()).forEach(tracePointId -> enableDisableTracePoint(tracePointId, client, false));
     }
 
     public static void disableTag(String tag, String client) {
@@ -370,7 +371,7 @@ public final class TracePointManager {
                 "Disabling tracepoints with tag {} from client {}",
                 tag, client);
 
-        tagTracePointListMap.get(tag).forEach(tracePointId -> enableDisableTracePoint(tracePointId, client, true));
+        tagTracePointListMap.getOrDefault(tag, Collections.emptyList()).forEach(tracePointId -> enableDisableTracePoint(tracePointId, client, true));
     }
 
     public static void removeAllTracePoints() {
