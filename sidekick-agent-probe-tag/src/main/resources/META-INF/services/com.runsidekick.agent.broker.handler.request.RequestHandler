@@ -1,2 +1,2 @@
-com.runsidekick.agent.probetag.handler.DisableProbeTagRequestHandler
-com.runsidekick.agent.probetag.handler.EnableProbeTagRequestHandler
+com.runsidekick.agent.probetag.handler.request.DisableProbeTagRequestHandler
+com.runsidekick.agent.probetag.handler.request.EnableProbeTagRequestHandler
