@@ -5,11 +5,11 @@ import com.runsidekick.agent.broker.response.impl.BaseResponse;
 /**
  * @author yasin.kalafat
  */
-public class DisableTagResponse extends BaseResponse<DisableTagResponse> {
+public class DisableProbeTagResponse extends BaseResponse<DisableProbeTagResponse> {
 
     @Override
     public String toString() {
-        return "DisableTagResponse{" +
+        return "DisableProbeTagResponse{" +
                 "requestId='" + requestId + '\'' +
                 ", applicationInstanceId='" + applicationInstanceId + '\'' +
                 ", client='" + client + '\'' +
