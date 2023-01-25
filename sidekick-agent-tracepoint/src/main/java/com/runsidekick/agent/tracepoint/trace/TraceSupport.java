@@ -17,9 +17,12 @@ public final class TraceSupport {
             new ConcurrentWeakMap();
     private static final ConcurrentWeakMap<ClassLoader, OpenTracingMetadata> openTracingMetadataCache =
             new ConcurrentWeakMap();
+    private static final ConcurrentWeakMap<ClassLoader, OpenTelemetryMetadata> openTelemetryMetadataCache =
+            new ConcurrentWeakMap();
 
     private static boolean thundraCheckDisabled = false;
     private static boolean openTracingCheckDisabled = false;
+    private static boolean openTelemetryCheckDisabled = false;
 
     private TraceSupport() {
     }
@@ -31,6 +34,9 @@ public final class TraceSupport {
         TraceContext traceContext = getTraceContextFromThundra(classLoader);
         if (traceContext == null) {
             traceContext = getTraceContextFromOpenTracing(classLoader);
+        }
+        if (traceContext == null) {
+            traceContext = getTraceContextFromOpenTelemetry(classLoader);
         }
         return traceContext;
     }
@@ -244,6 +250,109 @@ public final class TraceSupport {
             */
         } catch (Throwable t) {
             LOGGER.debug("Unable to get trace context from OpenTracing", t);
+        }
+        return null;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static class OpenTelemetryMetadata {
+
+        private static final OpenTelemetryMetadata EMPTY = new OpenTelemetryMetadata();
+
+        private final Class<?> globalOpenTelemetryClass;
+        private final Method getMethod;
+        private final Method currentSpanMethod;
+        private final Method contextMethod;
+        private final Method getTraceIdMethod;
+        private final Method getSpanIdMethod;
+
+        private OpenTelemetryMetadata() {
+            this.globalOpenTelemetryClass = null;
+            this.getMethod = null;
+            this.currentSpanMethod = null;
+            this.contextMethod = null;
+            this.getTraceIdMethod = null;
+            this.getSpanIdMethod = null;
+        }
+
+        private OpenTelemetryMetadata(Class<?> globalOpenTelemetryClass, Method getMethod,
+                                      Method currentSpanMethod, Method contextMethod,
+                                      Method getTraceIdMethod, Method getSpanIdMethod) {
+            this.globalOpenTelemetryClass = globalOpenTelemetryClass;
+            this.getMethod = getMethod;
+            this.currentSpanMethod = currentSpanMethod;
+            this.contextMethod = contextMethod;
+            this.getTraceIdMethod = getTraceIdMethod;
+            this.getSpanIdMethod = getSpanIdMethod;
+        }
+
+        private boolean isEmpty() {
+            return globalOpenTelemetryClass == null;
+        }
+
+    }
+
+    private static OpenTelemetryMetadata createOpenTelemetryMetadata(ClassLoader classLoader) {
+        try {
+            Class<?> globalOpenTelemetryClass = classLoader.loadClass("io.opentelemetry.api.GlobalOpenTelemetry");
+            Method getMethod = globalOpenTelemetryClass.getMethod("get");
+
+            Class<?> spanClass = classLoader.loadClass("io.opentelemetry.api.trace.Span");
+            Method currentSpanMethod = spanClass.getMethod("current");
+            Method contextMethod = spanClass.getMethod("getSpanContext");
+
+            Class<?> spanContextClass = classLoader.loadClass("io.opentelemetry.api.trace.SpanContext");
+            Method getTraceIdMethod = spanContextClass.getMethod("getTraceId");
+            Method getSpanIdMethod = spanContextClass.getMethod("getSpanId");
+
+            return new OpenTelemetryMetadata(
+                    globalOpenTelemetryClass, getMethod,
+                    currentSpanMethod, contextMethod,
+                    getTraceIdMethod, getSpanIdMethod);
+        } catch (ClassNotFoundException | NoSuchMethodException | NoClassDefFoundError | NoSuchMethodError e) {
+            LOGGER.debug("Unable to get OpenTelemetry metadata", e);
+            return OpenTelemetryMetadata.EMPTY;
+        }
+    }
+
+    private static OpenTelemetryMetadata getOpenTelemetryMetadata(ClassLoader classLoader) {
+        OpenTelemetryMetadata openTelemetryMetadata = openTelemetryMetadataCache.get(classLoader);
+        if (openTelemetryMetadata == null) {
+            openTelemetryMetadata = createOpenTelemetryMetadata(classLoader);
+            OpenTelemetryMetadata existingOpenTelemetryMetadata =
+                    openTelemetryMetadataCache.putIfAbsent(classLoader, openTelemetryMetadata);
+            if (existingOpenTelemetryMetadata != null) {
+                openTelemetryMetadata = existingOpenTelemetryMetadata;
+            }
+        }
+        return openTelemetryMetadata;
+    }
+
+    private static TraceContext getTraceContextFromOpenTelemetry(ClassLoader classLoader) {
+        if (openTelemetryCheckDisabled) {
+            return null;
+        }
+        try {
+            OpenTelemetryMetadata openTelemetryMetadata = getOpenTelemetryMetadata(classLoader);
+            if (openTelemetryMetadata.isEmpty()) {
+                openTelemetryCheckDisabled = true;
+            } else {
+                Object tracer = openTelemetryMetadata.getMethod.invoke(openTelemetryMetadata.globalOpenTelemetryClass);
+                if (tracer != null) {
+                    Object span = openTelemetryMetadata.currentSpanMethod.invoke(tracer);
+                    if (span != null) {
+                        Object spanContext = openTelemetryMetadata.contextMethod.invoke(span);
+                        if (spanContext != null) {
+                            String traceId = (String) openTelemetryMetadata.getTraceIdMethod.invoke(spanContext);
+                            String spanId = (String) openTelemetryMetadata.getSpanIdMethod.invoke(spanContext);
+                            return new TraceContext(traceId, null, spanId);
+                        }
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            LOGGER.debug("Unable to get trace context from OpenTelemetry", t);
         }
         return null;
     }
