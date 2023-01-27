@@ -147,6 +147,13 @@ public final class TracePointSupport implements BaseProbeSupport {
         TracePointManager.disableTag(tag, client);
     }
 
+    public static void removeTag(String tag, String client) {
+        if (client == null) {
+            client = BrokerManager.BROKER_CLIENT;
+        }
+        TracePointManager.removeTag(tag, client);
+    }
+
     public static void publishTracePointEvent(Event event) {
         BrokerManager.serializeAndPublishEvent(event);
     }

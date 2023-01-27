@@ -374,6 +374,14 @@ public final class TracePointManager {
         tagTracePointListMap.getOrDefault(tag, Collections.emptyList()).forEach(tracePointId -> enableDisableTracePoint(tracePointId, client, true));
     }
 
+    public static void removeTag(String tag, String client) {
+        LOGGER.debug(
+                "Removing tag {} from client {}",
+                tag, client);
+
+        tagTracePointListMap.remove(tag);
+    }
+
     public static void removeAllTracePoints() {
         tracePointProbeMap.clear();
     }
