@@ -364,18 +364,26 @@ public final class LogPointManager {
 
     public static void enableTag(String tag, String client) {
         LOGGER.debug(
-                "Enabling tracepoints with tag {} from client {}",
+                "Enabling logpoints with tag {} from client {}",
                 tag, client);
 
-        tagLogPointListMap.getOrDefault(tag, Collections.emptyList()).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, false));
+        tagLogPointListMap.getOrDefault(tag, Collections.emptyList()).forEach(logPointId -> enableDisableLogPoint(logPointId, client, false));
     }
 
     public static void disableTag(String tag, String client) {
         LOGGER.debug(
-                "Disabling tracepoints with tag {} from client {}",
+                "Disabling logpoints with tag {} from client {}",
                 tag, client);
 
-        tagLogPointListMap.getOrDefault(tag, Collections.emptyList()).forEach(tracePointId -> enableDisableLogPoint(tracePointId, client, true));
+        tagLogPointListMap.getOrDefault(tag, Collections.emptyList()).forEach(logPointId -> enableDisableLogPoint(logPointId, client, true));
+    }
+
+    public static void removeTag(String tag, String client) {
+        LOGGER.debug(
+                "Removing tag {} from client {}",
+                tag, client);
+
+        tagLogPointListMap.remove(tag);
     }
 
     public static void removeAllLogPoints() {

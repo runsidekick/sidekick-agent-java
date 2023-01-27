@@ -148,6 +148,13 @@ public final class LogPointSupport implements BaseProbeSupport {
         LogPointManager.disableTag(tag, client);
     }
 
+    public static void removeTag(String tag, String client) {
+        if (client == null) {
+            client = BrokerManager.BROKER_CLIENT;
+        }
+        LogPointManager.removeTag(tag, client);
+    }
+
     public static void publishLogPointEvent(Event event) {
         BrokerManager.serializeAndPublishEvent(event);
     }
