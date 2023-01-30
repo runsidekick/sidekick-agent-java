@@ -365,51 +365,14 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <groupId>com.github.wvengen</groupId>
-                    <artifactId>proguard-maven-plugin</artifactId>
-                    <version>${maven.proguard.plugin.version}</version>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.8</version>
+                    <extensions>true</extensions>
                     <configuration>
-                        <includeDependency>false</includeDependency>
-                        <injar>${project.build.finalName}.jar</injar>
-                        <outjar>${project.build.finalName}.jar</outjar>
-                        <inFilter>!**/module-info.class,!META-INF/versions/9/**</inFilter>
-                        <libs>
-                            <lib>${java.home}/lib/rt.jar</lib>
-                        </libs>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>proguard</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>${maven.release.plugin.version}</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.apache.maven.scm</groupId>
-                            <artifactId>maven-scm-provider-gitexe</artifactId>
-                            <version>1.8.1</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-scm-plugin</artifactId>
-                            <version>1.8.1</version>
-                        </dependency>
-                    </dependencies>
-                    <configuration>
-                        <tagNameFormat>v@{project.version}</tagNameFormat>
-                        <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <releaseProfiles>releases</releaseProfiles>
-                        <useReleaseProfile>false</useReleaseProfile>
-                        <checkModificationExcludes>
-                            <checkModificationExclude>pom.xml</checkModificationExclude>
-                        </checkModificationExcludes>
+                        <serverId>ossrh</serverId>
+                        <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
                     </configuration>
                 </plugin>
             </plugins>
@@ -473,17 +436,6 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.8</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-release-plugin</artifactId>
                         <version>2.5.3</version>
@@ -491,12 +443,12 @@
                             <dependency>
                                 <groupId>org.apache.maven.scm</groupId>
                                 <artifactId>maven-scm-provider-gitexe</artifactId>
-                                <version>1.9.1</version>
+                                <version>1.8.1</version>
                             </dependency>
                             <dependency>
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-scm-plugin</artifactId>
-                                <version>1.9.1</version>
+                                <version>1.8.1</version>
                             </dependency>
                         </dependencies>
                         <configuration>
