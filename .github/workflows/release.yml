@@ -47,4 +47,4 @@ jobs:
       - name: Build and Release with Maven
         env:
           GITHUB_TOKEN: ${{ secrets.SIDEKICK_DEVOPS_GITHUB_ACCESS_TOKEN }}
-        run: mvn -q clean install release:clean release:prepare release:perform release:clean --batch-mode -P release
+        run: mvn -X clean install release:clean release:prepare release:perform release:clean --batch-mode -P release
