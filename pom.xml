@@ -14,7 +14,7 @@
         <connection>scm:git:https://${GITHUB_TOKEN}@github.com/runsidekick/sidekick-agent-java.git</connection>
         <developerConnection>scm:git:https://${GITHUB_TOKEN}@github.com/runsidekick/sidekick-agent-java.git</developerConnection>
         <url>https://github.com/runsidekick/sidekick-agent-java</url>
-        <tag>HEAD</tag>
+        <tag>v0.0.16</tag>
     </scm>
     <developers>
         <developer>
