@@ -65,7 +65,7 @@ public final class Agent {
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static URL exportAndGetAgentUrl() throws IOException {
+    static File exportAndGetAgentFile() throws IOException {
         URL agentLocation = Agent.class.getProtectionDomain().getCodeSource().getLocation();
         JarFile jarFile = new JarFile(agentLocation.getFile());
         Enumeration<JarEntry> jarEntries = jarFile.entries();
@@ -91,7 +91,7 @@ public final class Agent {
         if (!file.exists() || file.length() != agentJarEntry.getSize()) {
             unpack(jarFile, agentJarEntry, file);
         }
-        return file.toURL();
+        return file;
     }
 
     private static void unpack(JarFile jarFile, JarEntry entry, File file) throws IOException {
@@ -137,8 +137,8 @@ public final class Agent {
     }
 
     private static void exportAgent(ClassLoader classLoader, Instrumentation instrumentation) throws Exception {
-        URL agentUrl = exportAndGetAgentUrl();
-        instrumentation.appendToSystemClassLoaderSearch(new JarFile(agentUrl.getFile()));
+        File agentFile = exportAndGetAgentFile();
+        instrumentation.appendToSystemClassLoaderSearch(new JarFile(agentFile));
     }
 
     private static boolean startAgent(ClassLoader classLoader,

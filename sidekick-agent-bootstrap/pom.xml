@@ -36,6 +36,7 @@
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                         <manifestEntries>
+                            <Main-Class>com.runsidekick.agent.bootstrap.Attach</Main-Class>
                             <Agent-Class>com.runsidekick.agent.bootstrap.Agent</Agent-Class>
                             <Premain-Class>com.runsidekick.agent.bootstrap.Agent</Premain-Class>
                             <Can-Retransform-Classes>true</Can-Retransform-Classes>
